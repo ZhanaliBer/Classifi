@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f9fa">
+  <title>Midterm Calculus — Open Math</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #202122;
+      --muted: #54595d;
+      --line: #a2a9b1;
+      --blue: #36c;
+      --paper: #fff;
+      --canvas: #f8f9fa;
+      --highlight: #eaf3ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--canvas);
+      font: 16px/1.65 Georgia, "Times New Roman", serif;
+    }
+
+    a { color: var(--blue); }
+    button, input { font: inherit; }
+
+    .topbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px clamp(18px, 5vw, 64px);
+      background: var(--paper);
+      border-bottom: 1px solid #c8ccd1;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid #a7d7f9;
+      border-radius: 50%;
+      color: #202122;
+      background: #f1f8fd;
+      font: 700 25px/1 Georgia, serif;
+    }
+
+    .brand-name {
+      color: var(--ink);
+      font: 20px/1.2 Georgia, serif;
+      text-decoration: none;
+    }
+
+    .brand-subtitle {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font: 12px/1.3 Arial, sans-serif;
+      letter-spacing: .04em;
+    }
+
+    .layout {
+      width: min(1180px, calc(100% - 40px));
+      margin: 28px auto 56px;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      padding: 16px;
+      border: 1px solid #c8ccd1;
+      background: var(--paper);
+      font-family: Arial, sans-serif;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 12px;
+      font: 700 13px/1.4 Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+    }
+
+    .side-link {
+      display: block;
+      padding: 8px 9px;
+      border-left: 3px solid transparent;
+      color: var(--blue);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .side-link:hover { background: #f1f4f8; }
+    .side-link.active {
+      border-left-color: var(--blue);
+      color: var(--ink);
+      background: var(--highlight);
+      font-weight: 700;
+    }
+
+    main {
+      min-width: 0;
+      border: 1px solid #c8ccd1;
+      background: var(--paper);
+    }
+
+    .article {
+      padding: clamp(22px, 5vw, 48px);
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font: 12px/1.5 Arial, sans-serif;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 10px clamp(16px, 4vw, 38px) 0;
+      border-bottom: 1px solid var(--line);
+      background: var(--canvas);
+      font: 14px/1.4 Arial, sans-serif;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      margin-bottom: -1px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-bottom-color: var(--line);
+      color: var(--blue);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .tab:hover { background: #fff; }
+    .tab[aria-selected="true"] {
+      border-color: var(--line);
+      border-bottom-color: var(--paper);
+      color: var(--ink);
+      background: var(--paper);
+      font-weight: 700;
+    }
+
+    .lead {
+      margin: 20px 0;
+      padding: 14px 18px;
+      border: 1px solid #a7d7f9;
+      background: #f8fcff;
+    }
+
+    h2 {
+      margin: 28px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #eaecf0;
+      font-size: 25px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin: 20px 0 4px;
+      font-size: 18px;
+    }
+
+    p { margin: 10px 0; }
+    ul { padding-left: 24px; }
+    li { margin: 5px 0; }
+
+    .formula {
+      overflow-x: auto;
+      margin: 14px 0;
+      padding: 13px 16px;
+      border: 1px solid #eaecf0;
+      background: #f8f9fa;
+      font: 17px/1.6 "Cambria Math", Cambria, Georgia, serif;
+      text-align: center;
+    }
+
+    .note {
+      margin: 18px 0;
+      padding: 12px 16px;
+      border-left: 4px solid #36c;
+      background: var(--highlight);
+    }
+
+    .page-footer {
+      padding: 12px 22px;
+      border-top: 1px solid #c8ccd1;
+      color: var(--muted);
+      background: var(--canvas);
+      font: 12px/1.5 Arial, sans-serif;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 720px) {
+      .layout {
+        width: min(100% - 20px, 600px);
+        margin-top: 12px;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .sidebar {
+        position: static;
+        padding: 10px;
+      }
+
+      .sidebar h2 { margin: 0 0 6px; }
+      .side-link { display: inline-block; }
+      .article { padding: 22px 18px; }
+      .topbar { min-height: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">∑</div>
+    <a class="brand-name" href="#home" data-page-link="home">
+      Open Math
+      <span class="brand-subtitle">A little encyclopedia of calculus</span>
+    </a>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" aria-label="Article navigation">
+      <h2>Midterm Calculus</h2>
+      <nav>
+        <a class="side-link active" href="#home" data-page-link="home" aria-current="page">Overview</a>
+        <a class="side-link" href="#sets-functions" data-page-link="sets-functions">Sets and Functions</a>
+        <a class="side-link" href="#limits" data-page-link="limits">Introduction to limits</a>
+        <a class="side-link" href="#derivatives" data-page-link="derivatives">Derivatives</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="tabs" role="tablist" aria-label="Midterm Calculus topics">
+        <button class="tab" id="tab-home" type="button" role="tab" aria-selected="true" aria-controls="page-home" data-page-link="home">Midterm Calculus</button>
+        <button class="tab" id="tab-sets-functions" type="button" role="tab" aria-selected="false" aria-controls="page-sets-functions" data-page-link="sets-functions" tabindex="-1">Sets and Functions</button>
+        <button class="tab" id="tab-limits" type="button" role="tab" aria-selected="false" aria-controls="page-limits" data-page-link="limits" tabindex="-1">Introduction to limits</button>
+        <button class="tab" id="tab-derivatives" type="button" role="tab" aria-selected="false" aria-controls="page-derivatives" data-page-link="derivatives" tabindex="-1">Derivatives</button>
+      </div>
+
+      <article class="article" id="page-home" role="tabpanel" aria-labelledby="tab-home">
+        <p class="eyebrow">Study guide · Calculus I</p>
+        <h1>Midterm Calculus</h1>
+        <div class="lead">
+          <strong>Welcome to your calculus study guide.</strong>
+          Explore the ideas behind functions, limits, and derivatives. Use the tabs above or the topic list to move between articles.
+        </div>
+        <p>Calculus describes how quantities change and how small pieces combine into a whole. These three topics build on one another: functions model relationships, limits explain behavior near a point, and derivatives measure instantaneous change.</p>
+
+        <h2>Topics in this guide</h2>
+        <ul>
+          <li><a href="#sets-functions" data-page-link="sets-functions"><strong>Sets and Functions</strong></a> — domains, ranges, and ways to describe relationships between inputs and outputs.</li>
+          <li><a href="#limits" data-page-link="limits"><strong>Introduction to limits</strong></a> — what a function approaches, continuity, and the language of limits.</li>
+          <li><a href="#derivatives" data-page-link="derivatives"><strong>Derivatives</strong></a> — rates of change, tangent lines, and the first differentiation rules.</li>
+        </ul>
+
+        <h2>How the ideas connect</h2>
+        <p>A derivative is defined using a limit. To understand derivatives, first get comfortable with functions and with the way function values behave as inputs approach a particular number.</p>
+        <div class="formula">Functions &rarr; Limits &rarr; Derivatives</div>
+      </article>
+
+      <article class="article" id="page-sets-functions" role="tabpanel" aria-labelledby="tab-sets-functions" hidden>
+        <p class="eyebrow">Midterm Calculus · Topic 1</p>
+        <h1>Sets and Functions</h1>
+        <div class="lead"><strong>Big idea:</strong> A function assigns exactly one output to each allowed input.</div>
+
+        <h2>Sets and intervals</h2>
+        <p>A <strong>set</strong> is a collection of objects. In calculus, sets often describe possible real-number inputs. Interval notation gives a concise way to write ranges of real numbers:</p>
+        <ul>
+          <li><strong>[a, b]</strong> includes both endpoints: a &le; x &le; b.</li>
+          <li><strong>(a, b)</strong> excludes both endpoints: a &lt; x &lt; b.</li>
+          <li><strong>[a, b)</strong> includes a but excludes b.</li>
+          <li><strong>(-∞, a]</strong> describes all real x less than or equal to a.</li>
+        </ul>
+
+        <h2>What is a function?</h2>
+        <p>A function <em>f</em> from a domain <em>D</em> to a codomain assigns each input <em>x</em> in <em>D</em> one and only one output, written <em>f(x)</em>. The <strong>domain</strong> is the set of allowed inputs; the <strong>range</strong> is the set of outputs the function actually produces.</p>
+        <div class="formula">f: D &rarr; R &nbsp;&nbsp; x &mapsto; f(x)</div>
+        <p>For example, if f(x) = x² and the domain is all real numbers, then the range is [0, ∞). No real input produces a negative output.</p>
+
+        <h2>Finding a domain</h2>
+        <p>Start with all real numbers, then exclude inputs that make the expression undefined. In particular:</p>
+        <ul>
+          <li>A denominator cannot equal zero.</li>
+          <li>The expression inside an even root must be nonnegative when working over the reals.</li>
+          <li>The argument of a logarithm must be positive.</li>
+        </ul>
+        <div class="note"><strong>Example:</strong> For f(x) = √(x − 2), require x − 2 ≥ 0. Its domain is [2, ∞).</div>
+
+        <h2>Function notation and composition</h2>
+        <p>The expression f(a) means evaluate the function at input a. If f(x) = 2x + 1, then f(3) = 7. Composition applies one function after another:</p>
+        <div class="formula">(f ∘ g)(x) = f(g(x))</div>
+        <p>Order matters: in general, f(g(x)) is not the same as g(f(x)).</p>
+      </article>
+
+      <article class="article" id="page-limits" role="tabpanel" aria-labelledby="tab-limits" hidden>
+        <p class="eyebrow">Midterm Calculus · Topic 2</p>
+        <h1>Introduction to limits</h1>
+        <div class="lead"><strong>Big idea:</strong> A limit describes the value a function approaches as its input gets close to a point.</div>
+
+        <h2>The meaning of a limit</h2>
+        <p>We write the limit of f(x) as x approaches a as follows:</p>
+        <div class="formula">lim<sub>x → a</sub> f(x) = L</div>
+        <p>This says that f(x) can be made as close as we like to L by taking x sufficiently close to a (but not necessarily equal to a). The function does not need to be defined at x = a for this limit to exist.</p>
+
+        <h2>One-sided limits</h2>
+        <p>A <strong>left-hand limit</strong> considers inputs less than a; a <strong>right-hand limit</strong> considers inputs greater than a. A two-sided limit exists precisely when both one-sided limits exist and agree:</p>
+        <div class="formula">lim<sub>x → a⁻</sub> f(x) = lim<sub>x → a⁺</sub> f(x) = L</div>
+        <div class="note"><strong>Remember:</strong> If the left and right limits differ, the two-sided limit does not exist.</div>
+
+        <h2>Limit laws</h2>
+        <p>When the individual limits exist, limits respect familiar arithmetic operations:</p>
+        <ul>
+          <li>Sum: lim(f + g) = lim f + lim g.</li>
+          <li>Product: lim(fg) = (lim f)(lim g).</li>
+          <li>Quotient: lim(f/g) = (lim f)/(lim g), provided lim g ≠ 0.</li>
+          <li>For a polynomial, direct substitution gives its limit at every real number.</li>
+        </ul>
+        <p>If direct substitution gives 0/0, that is an indeterminate form—not the answer. Try factoring and simplifying, or use another algebraic method before evaluating the limit again.</p>
+
+        <h2>Continuity</h2>
+        <p>A function f is <strong>continuous at a</strong> when all three conditions hold:</p>
+        <ol>
+          <li>f(a) is defined.</li>
+          <li>lim<sub>x → a</sub> f(x) exists.</li>
+          <li>lim<sub>x → a</sub> f(x) = f(a).</li>
+        </ol>
+        <p>Informally, the graph has no break, jump, or hole at that point.</p>
+      </article>
+
+      <article class="article" id="page-derivatives" role="tabpanel" aria-labelledby="tab-derivatives" hidden>
+        <p class="eyebrow">Midterm Calculus · Topic 3</p>
+        <h1>Derivatives</h1>
+        <div class="lead"><strong>Big idea:</strong> The derivative gives the instantaneous rate at which a function changes.</div>
+
+        <h2>Definition from a limit</h2>
+        <p>The derivative of f at x is the limit of the average rate of change over a shrinking interval:</p>
+        <div class="formula">f′(x) = lim<sub>h → 0</sub> [f(x + h) − f(x)] / h</div>
+        <p>Geometrically, f′(a) is the slope of the tangent line to the graph at x = a. In an applied setting, it describes an instantaneous rate—for example, velocity is the derivative of position with respect to time.</p>
+
+        <h2>Basic differentiation rules</h2>
+        <ul>
+          <li><strong>Constant:</strong> d/dx(c) = 0.</li>
+          <li><strong>Power rule:</strong> d/dx(x<sup>n</sup>) = nx<sup>n−1</sup>.</li>
+          <li><strong>Constant multiple:</strong> d/dx[cf(x)] = cf′(x).</li>
+          <li><strong>Sum:</strong> d/dx[f(x) + g(x)] = f′(x) + g′(x).</li>
+        </ul>
+        <div class="note"><strong>Example:</strong> If f(x) = 3x² − 4x + 5, then f′(x) = 6x − 4.</div>
+
+        <h2>Product and quotient rules</h2>
+        <p>For products and quotients, differentiate using the appropriate rule rather than differentiating each part separately:</p>
+        <div class="formula">(fg)′ = f′g + fg′ &nbsp;&nbsp;&nbsp; (f/g)′ = (f′g − fg′) / g²</div>
+
+        <h2>Chain rule</h2>
+        <p>For a composition of functions, differentiate the outer function and multiply by the derivative of the inner function:</p>
+        <div class="formula">d/dx f(g(x)) = f′(g(x)) · g′(x)</div>
+        <p>For example, if y = (3x + 1)², the chain rule gives y′ = 2(3x + 1) · 3 = 18x + 6.</p>
+      </article>
+
+      <footer class="page-footer">A compact, local calculus reference · Use the topic tabs to explore each article.</footer>
+    </main>
+  </div>
+
+  <script>
+    (() => {
+      const pageIds = ["home", "sets-functions", "limits", "derivatives"];
+      const links = document.querySelectorAll("[data-page-link]");
+      const tabs = document.querySelectorAll('[role="tab"]');
+
+      function showPage(pageId, updateHistory) {
+        const selectedId = pageIds.includes(pageId) ? pageId : "home";
+        for (const id of pageIds) {
+          const page = document.getElementById(`page-${id}`);
+          const tab = document.getElementById(`tab-${id}`);
+          page.hidden = id !== selectedId;
+          tab.setAttribute("aria-selected", String(id === selectedId));
+          tab.tabIndex = id === selectedId ? 0 : -1;
+        }
+        for (const link of document.querySelectorAll(".side-link")) {
+          const active = link.dataset.pageLink === selectedId;
+          link.classList.toggle("active", active);
+          if (active) link.setAttribute("aria-current", "page");
+          else link.removeAttribute("aria-current");
+        }
+        if (updateHistory) history.pushState({ pageId: selectedId }, "", `#${selectedId}`);
+      }
+
+      for (const link of links) {
+        link.addEventListener("click", (event) => {
+          const pageId = link.dataset.pageLink;
+          if (!pageIds.includes(pageId)) return;
+          event.preventDefault();
+          showPage(pageId, true);
+        });
+      }
+
+      for (const tab of tabs) {
+        tab.addEventListener("keydown", (event) => {
+          const index = Array.from(tabs).indexOf(tab);
+          let nextIndex;
+          if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+          else if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === "Home") nextIndex = 0;
+          else if (event.key === "End") nextIndex = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          tabs[nextIndex].focus();
+          showPage(tabs[nextIndex].dataset.pageLink, true);
+        });
+      }
+
+      window.addEventListener("popstate", () => showPage(location.hash.slice(1), false));
+      showPage(location.hash.slice(1), false);
+    })();
+  </script>
+</body>
+</html>
