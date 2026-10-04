@@ -66,6 +66,61 @@
       letter-spacing: .04em;
     }
 
+    .pinger {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      padding: 9px 15px;
+      border: 1px solid #00d9ff;
+      border-radius: 4px;
+      color: #b9f8ff;
+      background: #101528;
+      box-shadow: 0 0 8px #00d9ff66, inset 0 0 10px #00d9ff22;
+      font: 700 12px/1.2 Arial, sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color .2s, border-color .2s, background .2s, box-shadow .2s;
+    }
+
+    .pinger:hover:not(:disabled) {
+      color: #fff;
+      box-shadow: 0 0 15px #00d9ffaa, inset 0 0 12px #00d9ff44;
+    }
+
+    .pinger:disabled { cursor: wait; opacity: .8; }
+    .pinger[data-state="success"] {
+      border-color: #39ff88;
+      color: #b9ffd1;
+      box-shadow: 0 0 10px #39ff8877, inset 0 0 10px #39ff8822;
+    }
+    .pinger[data-state="error"] {
+      border-color: #ff3864;
+      color: #ffc0cf;
+      box-shadow: 0 0 10px #ff386477, inset 0 0 10px #ff386422;
+    }
+
+    .pinger-light {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00d9ff;
+      box-shadow: 0 0 8px currentColor;
+    }
+
+    .pinger[data-state="success"] .pinger-light { background: #39ff88; }
+    .pinger[data-state="error"] .pinger-light { background: #ff3864; }
+    .pinger-status {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
     .layout {
       width: min(1180px, calc(100% - 40px));
       margin: 28px auto 56px;
@@ -234,7 +289,8 @@
       .sidebar h2 { margin: 0 0 6px; }
       .side-link { display: inline-block; }
       .article { padding: 22px 18px; }
-      .topbar { min-height: 64px; }
+      .topbar { min-height: 64px; gap: 10px; }
+      .pinger { padding: 8px 10px; font-size: 10px; }
     }
   </style>
 </head>
@@ -245,6 +301,11 @@
       Open Math
       <span class="brand-subtitle">A little encyclopedia of calculus</span>
     </a>
+    <button class="pinger" id="api-pinger" type="button" data-state="idle" aria-describedby="pinger-status">
+      <span class="pinger-light" aria-hidden="true"></span>
+      <span id="pinger-label">PINGER</span>
+    </button>
+    <span class="pinger-status" id="pinger-status" role="status" aria-live="polite">API status unknown.</span>
   </header>
 
   <div class="layout">
@@ -391,6 +452,36 @@
 
   <script>
     (() => {
+      const pinger = document.getElementById("api-pinger");
+      const pingerLabel = document.getElementById("pinger-label");
+      const pingerStatus = document.getElementById("pinger-status");
+
+      pinger.addEventListener("click", async () => {
+        pinger.disabled = true;
+        pinger.dataset.state = "loading";
+        pingerLabel.textContent = "PINGING...";
+        pingerStatus.textContent = "Checking connection to the LLM API.";
+
+        try {
+          const response = await fetch("/api/ping", { method: "POST" });
+          const result = await response.json();
+          if (!response.ok || !result.ok) {
+            throw new Error(result.message || "The API check failed.");
+          }
+          pinger.dataset.state = "success";
+          pingerLabel.textContent = "ONLINE";
+          pingerStatus.textContent = result.message;
+        } catch (error) {
+          pinger.dataset.state = "error";
+          pingerLabel.textContent = "OFFLINE";
+          pingerStatus.textContent = error instanceof Error
+            ? error.message
+            : "Could not check the API connection.";
+        } finally {
+          pinger.disabled = false;
+        }
+      });
+
       const pageIds = ["home", "sets-functions", "limits", "derivatives"];
       const links = document.querySelectorAll("[data-page-link]");
       const tabs = document.querySelectorAll('[role="tab"]');
