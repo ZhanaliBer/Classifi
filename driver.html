@@ -347,6 +347,23 @@
       background: var(--highlight);
     }
 
+    .section-check {
+      margin: 14px 0 22px;
+      padding: 12px 16px;
+      border-left: 4px solid #c77d00;
+      background: #fff8e6;
+    }
+
+    .section-check h3 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+
+    .section-check ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+
     .formula-lab {
       margin-top: 30px;
       padding: 22px;
@@ -602,6 +619,9 @@
           || article.sections.some((section) =>
             !section
             || typeof section.heading !== "string"
+            || (section.visual !== undefined
+              && (typeof section.visual !== "string"
+                || !studyVisuals[section.visual]))
             || (section.paragraphs !== undefined
               && (!Array.isArray(section.paragraphs)
                 || section.paragraphs.some((text) => typeof text !== "string")))
@@ -693,6 +713,13 @@
             }
           }
 
+          if (section.visual) {
+            page.append(createStudyInteractive(
+              section.visual,
+              studyVisuals[section.visual].caption,
+            ));
+          }
+
           if (Array.isArray(section.steps) && section.steps.length) {
             const stepsHeading = document.createElement("h3");
             stepsHeading.textContent = "Порядок действий";
@@ -709,13 +736,19 @@
           }
 
           if (Array.isArray(section.key_points) && section.key_points.length) {
+            const check = document.createElement("aside");
+            check.className = "section-check";
+            check.setAttribute("aria-label", "Проверь себя");
+            const checkHeading = document.createElement("h3");
+            checkHeading.textContent = "Проверь себя";
             const list = document.createElement("ul");
             for (const text of section.key_points) {
               const item = document.createElement("li");
               item.textContent = text;
               list.append(item);
             }
-            page.append(list);
+            check.append(checkHeading, list);
+            page.append(check);
           }
         }
 
@@ -971,7 +1004,7 @@
               const derivative = 2 * value * Math.sin(value) + value * value * Math.cos(value);
               config = { xMin: -3, xMax: 3, yMin: -10, yMax: 10,
                 curves: [line(f)], points: [point(value, f(value))] };
-              message = `Для x²sin(x): u′v+uv′ = 2x·sin(x)+x²·cos(x). При x=${format(value, 2)}: f=${format(f(value))}, f′=${format(derivative)}.`;
+              message = `Пусть f=x², g=sin(x): (fg)′=f′g+fg′=2x·sin(x)+x²·cos(x). При x=${format(value, 2)}: f=${format(f(value))}, f′=${format(derivative)}.`;
               break;
             }
             case "derivative-trig": {
