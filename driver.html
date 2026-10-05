@@ -263,6 +263,73 @@
       background: var(--highlight);
     }
 
+    .formula-lab {
+      margin-top: 30px;
+      padding: 22px;
+      border: 1px solid #a7d7f9;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #f7fbff, #fff);
+    }
+
+    .formula-lab > h2 { margin-top: 0; }
+    .lab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .lab-panel {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid #d8e2ee;
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .lab-panel h3 { margin-top: 0; }
+    .lab-control {
+      display: grid;
+      grid-template-columns: minmax(90px, 1fr) minmax(100px, 1.5fr) 48px;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+      font: 14px/1.4 Arial, sans-serif;
+    }
+
+    .lab-control select { min-width: 0; }
+    .lab-control output {
+      color: #174ea6;
+      font: 700 13px/1.3 "Consolas", monospace;
+      text-align: right;
+    }
+
+    .lab-equation {
+      margin: 12px 0;
+      padding: 10px;
+      border-radius: 4px;
+      background: #f2f6fb;
+      font: 16px/1.5 "Cambria Math", Cambria, Georgia, serif;
+      text-align: center;
+    }
+
+    .lab-canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin-top: 12px;
+      border: 1px solid #eaecf0;
+      border-radius: 4px;
+      background: #fff;
+    }
+
+    .lab-result {
+      min-height: 44px;
+      margin: 10px 0 0;
+      color: #3b4654;
+      font: 14px/1.55 Arial, sans-serif;
+    }
+
     .page-footer {
       padding: 12px 22px;
       border-top: 1px solid #c8ccd1;
@@ -313,140 +380,25 @@
       <h2>Midterm Calculus</h2>
       <nav>
         <a class="side-link active" href="#home" data-page-link="home" aria-current="page">Overview</a>
-        <a class="side-link" href="#sets-functions" data-page-link="sets-functions">Sets and Functions</a>
-        <a class="side-link" href="#limits" data-page-link="limits">Introduction to limits</a>
-        <a class="side-link" href="#derivatives" data-page-link="derivatives">Derivatives</a>
       </nav>
     </aside>
 
     <main>
       <div class="tabs" role="tablist" aria-label="Midterm Calculus topics">
         <button class="tab" id="tab-home" type="button" role="tab" aria-selected="true" aria-controls="page-home" data-page-link="home">Midterm Calculus</button>
-        <button class="tab" id="tab-sets-functions" type="button" role="tab" aria-selected="false" aria-controls="page-sets-functions" data-page-link="sets-functions" tabindex="-1">Sets and Functions</button>
-        <button class="tab" id="tab-limits" type="button" role="tab" aria-selected="false" aria-controls="page-limits" data-page-link="limits" tabindex="-1">Introduction to limits</button>
-        <button class="tab" id="tab-derivatives" type="button" role="tab" aria-selected="false" aria-controls="page-derivatives" data-page-link="derivatives" tabindex="-1">Derivatives</button>
       </div>
 
       <article class="article" id="page-home" role="tabpanel" aria-labelledby="tab-home">
         <p class="eyebrow">Study guide · Calculus I</p>
         <h1>Midterm Calculus</h1>
         <div class="lead">
-          <strong>Welcome to your calculus study guide.</strong>
-          Explore the ideas behind functions, limits, and derivatives. Use the tabs above or the topic list to move between articles.
+          <strong>Your study guide starts here.</strong>
+          Study topics are organized in the tabs above.
         </div>
-        <p>Calculus describes how quantities change and how small pieces combine into a whole. These three topics build on one another: functions model relationships, limits explain behavior near a point, and derivatives measure instantaneous change.</p>
-
-        <h2>Topics in this guide</h2>
-        <ul>
-          <li><a href="#sets-functions" data-page-link="sets-functions"><strong>Sets and Functions</strong></a> — domains, ranges, and ways to describe relationships between inputs and outputs.</li>
-          <li><a href="#limits" data-page-link="limits"><strong>Introduction to limits</strong></a> — what a function approaches, continuity, and the language of limits.</li>
-          <li><a href="#derivatives" data-page-link="derivatives"><strong>Derivatives</strong></a> — rates of change, tangent lines, and the first differentiation rules.</li>
-        </ul>
-
-        <h2>How the ideas connect</h2>
-        <p>A derivative is defined using a limit. To understand derivatives, first get comfortable with functions and with the way function values behave as inputs approach a particular number.</p>
-        <div class="formula">Functions &rarr; Limits &rarr; Derivatives</div>
+        <p>Choose a topic from the tabs above. Empty topics are ready for new study material.</p>
       </article>
 
-      <article class="article" id="page-sets-functions" role="tabpanel" aria-labelledby="tab-sets-functions" hidden>
-        <p class="eyebrow">Midterm Calculus · Topic 1</p>
-        <h1>Sets and Functions</h1>
-        <div class="lead"><strong>Big idea:</strong> A function assigns exactly one output to each allowed input.</div>
-
-        <h2>Sets and intervals</h2>
-        <p>A <strong>set</strong> is a collection of objects. In calculus, sets often describe possible real-number inputs. Interval notation gives a concise way to write ranges of real numbers:</p>
-        <ul>
-          <li><strong>[a, b]</strong> includes both endpoints: a &le; x &le; b.</li>
-          <li><strong>(a, b)</strong> excludes both endpoints: a &lt; x &lt; b.</li>
-          <li><strong>[a, b)</strong> includes a but excludes b.</li>
-          <li><strong>(-∞, a]</strong> describes all real x less than or equal to a.</li>
-        </ul>
-
-        <h2>What is a function?</h2>
-        <p>A function <em>f</em> from a domain <em>D</em> to a codomain assigns each input <em>x</em> in <em>D</em> one and only one output, written <em>f(x)</em>. The <strong>domain</strong> is the set of allowed inputs; the <strong>range</strong> is the set of outputs the function actually produces.</p>
-        <div class="formula">f: D &rarr; R &nbsp;&nbsp; x &mapsto; f(x)</div>
-        <p>For example, if f(x) = x² and the domain is all real numbers, then the range is [0, ∞). No real input produces a negative output.</p>
-
-        <h2>Finding a domain</h2>
-        <p>Start with all real numbers, then exclude inputs that make the expression undefined. In particular:</p>
-        <ul>
-          <li>A denominator cannot equal zero.</li>
-          <li>The expression inside an even root must be nonnegative when working over the reals.</li>
-          <li>The argument of a logarithm must be positive.</li>
-        </ul>
-        <div class="note"><strong>Example:</strong> For f(x) = √(x − 2), require x − 2 ≥ 0. Its domain is [2, ∞).</div>
-
-        <h2>Function notation and composition</h2>
-        <p>The expression f(a) means evaluate the function at input a. If f(x) = 2x + 1, then f(3) = 7. Composition applies one function after another:</p>
-        <div class="formula">(f ∘ g)(x) = f(g(x))</div>
-        <p>Order matters: in general, f(g(x)) is not the same as g(f(x)).</p>
-      </article>
-
-      <article class="article" id="page-limits" role="tabpanel" aria-labelledby="tab-limits" hidden>
-        <p class="eyebrow">Midterm Calculus · Topic 2</p>
-        <h1>Introduction to limits</h1>
-        <div class="lead"><strong>Big idea:</strong> A limit describes the value a function approaches as its input gets close to a point.</div>
-
-        <h2>The meaning of a limit</h2>
-        <p>We write the limit of f(x) as x approaches a as follows:</p>
-        <div class="formula">lim<sub>x → a</sub> f(x) = L</div>
-        <p>This says that f(x) can be made as close as we like to L by taking x sufficiently close to a (but not necessarily equal to a). The function does not need to be defined at x = a for this limit to exist.</p>
-
-        <h2>One-sided limits</h2>
-        <p>A <strong>left-hand limit</strong> considers inputs less than a; a <strong>right-hand limit</strong> considers inputs greater than a. A two-sided limit exists precisely when both one-sided limits exist and agree:</p>
-        <div class="formula">lim<sub>x → a⁻</sub> f(x) = lim<sub>x → a⁺</sub> f(x) = L</div>
-        <div class="note"><strong>Remember:</strong> If the left and right limits differ, the two-sided limit does not exist.</div>
-
-        <h2>Limit laws</h2>
-        <p>When the individual limits exist, limits respect familiar arithmetic operations:</p>
-        <ul>
-          <li>Sum: lim(f + g) = lim f + lim g.</li>
-          <li>Product: lim(fg) = (lim f)(lim g).</li>
-          <li>Quotient: lim(f/g) = (lim f)/(lim g), provided lim g ≠ 0.</li>
-          <li>For a polynomial, direct substitution gives its limit at every real number.</li>
-        </ul>
-        <p>If direct substitution gives 0/0, that is an indeterminate form—not the answer. Try factoring and simplifying, or use another algebraic method before evaluating the limit again.</p>
-
-        <h2>Continuity</h2>
-        <p>A function f is <strong>continuous at a</strong> when all three conditions hold:</p>
-        <ol>
-          <li>f(a) is defined.</li>
-          <li>lim<sub>x → a</sub> f(x) exists.</li>
-          <li>lim<sub>x → a</sub> f(x) = f(a).</li>
-        </ol>
-        <p>Informally, the graph has no break, jump, or hole at that point.</p>
-      </article>
-
-      <article class="article" id="page-derivatives" role="tabpanel" aria-labelledby="tab-derivatives" hidden>
-        <p class="eyebrow">Midterm Calculus · Topic 3</p>
-        <h1>Derivatives</h1>
-        <div class="lead"><strong>Big idea:</strong> The derivative gives the instantaneous rate at which a function changes.</div>
-
-        <h2>Definition from a limit</h2>
-        <p>The derivative of f at x is the limit of the average rate of change over a shrinking interval:</p>
-        <div class="formula">f′(x) = lim<sub>h → 0</sub> [f(x + h) − f(x)] / h</div>
-        <p>Geometrically, f′(a) is the slope of the tangent line to the graph at x = a. In an applied setting, it describes an instantaneous rate—for example, velocity is the derivative of position with respect to time.</p>
-
-        <h2>Basic differentiation rules</h2>
-        <ul>
-          <li><strong>Constant:</strong> d/dx(c) = 0.</li>
-          <li><strong>Power rule:</strong> d/dx(x<sup>n</sup>) = nx<sup>n−1</sup>.</li>
-          <li><strong>Constant multiple:</strong> d/dx[cf(x)] = cf′(x).</li>
-          <li><strong>Sum:</strong> d/dx[f(x) + g(x)] = f′(x) + g′(x).</li>
-        </ul>
-        <div class="note"><strong>Example:</strong> If f(x) = 3x² − 4x + 5, then f′(x) = 6x − 4.</div>
-
-        <h2>Product and quotient rules</h2>
-        <p>For products and quotients, differentiate using the appropriate rule rather than differentiating each part separately:</p>
-        <div class="formula">(fg)′ = f′g + fg′ &nbsp;&nbsp;&nbsp; (f/g)′ = (f′g − fg′) / g²</div>
-
-        <h2>Chain rule</h2>
-        <p>For a composition of functions, differentiate the outer function and multiply by the derivative of the inner function:</p>
-        <div class="formula">d/dx f(g(x)) = f′(g(x)) · g′(x)</div>
-        <p>For example, if y = (3x + 1)², the chain rule gives y′ = 2(3x + 1) · 3 = 18x + 6.</p>
-      </article>
-
-      <footer class="page-footer">A compact, local calculus reference · Use the topic tabs to explore each article.</footer>
+      <footer class="page-footer">A compact calculus reference · Topic articles are maintained individually.</footer>
     </main>
   </div>
 
@@ -482,9 +434,361 @@
         }
       });
 
-      const pageIds = ["home", "sets-functions", "limits", "derivatives"];
-      const links = document.querySelectorAll("[data-page-link]");
-      const tabs = document.querySelectorAll('[role="tab"]');
+      const pageIds = ["home"];
+
+      function addGeneratedArticle(article) {
+        if (
+          !article
+          || typeof article.id !== "string"
+          || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.id)
+          || typeof article.title !== "string"
+          || typeof article.overview !== "string"
+          || !Array.isArray(article.sections)
+          || article.sections.some((section) =>
+            !section
+            || typeof section.heading !== "string"
+            || (section.paragraphs !== undefined
+              && (!Array.isArray(section.paragraphs)
+                || section.paragraphs.some((text) => typeof text !== "string")))
+            || (section.key_points !== undefined
+              && (!Array.isArray(section.key_points)
+                || section.key_points.some((text) => typeof text !== "string")))
+          )
+        ) {
+          throw new Error(`Topic file for "${article && article.id}" has an invalid format.`);
+        }
+
+        const pageId = `generated-${article.id}`;
+        if (pageIds.includes(pageId)) {
+          throw new Error(`Duplicate generated article id: ${article.id}`);
+        }
+
+        const tab = document.createElement("button");
+        tab.className = "tab";
+        tab.id = `tab-${pageId}`;
+        tab.type = "button";
+        tab.setAttribute("role", "tab");
+        tab.setAttribute("aria-selected", "false");
+        tab.setAttribute("aria-controls", `page-${pageId}`);
+        tab.tabIndex = -1;
+        tab.dataset.pageLink = pageId;
+        tab.textContent = article.title;
+        document.querySelector(".tabs").append(tab);
+
+        const sidebarLink = document.createElement("a");
+        sidebarLink.className = "side-link";
+        sidebarLink.href = `#${pageId}`;
+        sidebarLink.dataset.pageLink = pageId;
+        sidebarLink.textContent = article.title;
+        document.querySelector(".sidebar nav").append(sidebarLink);
+
+        const page = document.createElement("article");
+        page.className = "article";
+        page.id = `page-${pageId}`;
+        page.setAttribute("role", "tabpanel");
+        page.setAttribute("aria-labelledby", tab.id);
+        page.hidden = true;
+
+        const eyebrow = document.createElement("p");
+        eyebrow.className = "eyebrow";
+        eyebrow.textContent = article.source || "Midterm Calculus · Study topic";
+        page.append(eyebrow);
+
+        const heading = document.createElement("h1");
+        heading.textContent = article.title;
+        page.append(heading);
+
+        if (article.overview.trim()) {
+          const overview = document.createElement("div");
+          overview.className = "lead";
+          overview.textContent = article.overview;
+          page.append(overview);
+        }
+
+        for (const section of article.sections) {
+          const sectionHeading = document.createElement("h2");
+          sectionHeading.textContent = section.heading;
+          page.append(sectionHeading);
+
+          if (Array.isArray(section.paragraphs)) {
+            for (const text of section.paragraphs) {
+              const paragraph = document.createElement("p");
+              paragraph.textContent = text;
+              page.append(paragraph);
+            }
+          }
+
+          if (Array.isArray(section.key_points) && section.key_points.length) {
+            const list = document.createElement("ul");
+            for (const text of section.key_points) {
+              const item = document.createElement("li");
+              item.textContent = text;
+              list.append(item);
+            }
+            page.append(list);
+          }
+        }
+
+        if (article.interactive === "functions") {
+          page.append(createFormulaLab());
+        }
+
+        document.querySelector("main").append(page);
+        pageIds.push(pageId);
+      }
+
+      function createFormulaLab() {
+        const lab = document.createElement("section");
+        lab.className = "formula-lab";
+        lab.setAttribute("aria-labelledby", "formula-lab-title");
+        lab.innerHTML = `
+          <h2 id="formula-lab-title">Interactive formula lab</h2>
+          <p>Change the inputs and watch how function values and graphs respond.</p>
+          <div class="lab-grid">
+            <section class="lab-panel" aria-labelledby="function-machine-title">
+              <h3 id="function-machine-title">Function machine</h3>
+              <label class="lab-control">
+                <span>Choose f(x)</span>
+                <select data-function>
+                  <option value="square">x²</option>
+                  <option value="line">2x + 1</option>
+                  <option value="absolute">|x|</option>
+                  <option value="sine">sin(x)</option>
+                </select>
+                <span aria-hidden="true"></span>
+              </label>
+              <label class="lab-control">
+                <span>Input x</span>
+                <input data-input type="range" min="-4" max="4" step="0.1" value="2">
+                <output data-input-value for="input">2.0</output>
+              </label>
+              <p class="lab-equation" data-function-equation>f(x) = x²</p>
+              <canvas class="lab-canvas" data-function-graph width="560" height="260" role="img" aria-label="Graph of the selected function with the current input marked"></canvas>
+              <p class="lab-result" data-function-result aria-live="polite"></p>
+            </section>
+
+            <section class="lab-panel" aria-labelledby="transformation-title">
+              <h3 id="transformation-title">Function transformations</h3>
+              <label class="lab-control">
+                <span>Base f(x)</span>
+                <select data-base-function>
+                  <option value="square">x²</option>
+                  <option value="line">2x + 1</option>
+                  <option value="absolute">|x|</option>
+                  <option value="sine">sin(x)</option>
+                </select>
+                <span aria-hidden="true"></span>
+              </label>
+              <label class="lab-control">
+                <span>Stretch a</span>
+                <input data-stretch type="range" min="-2" max="2" step="0.1" value="1">
+                <output data-stretch-value>1.0</output>
+              </label>
+              <label class="lab-control">
+                <span>Shift h</span>
+                <input data-horizontal type="range" min="-3" max="3" step="0.1" value="0">
+                <output data-horizontal-value>0.0</output>
+              </label>
+              <label class="lab-control">
+                <span>Shift k</span>
+                <input data-vertical type="range" min="-3" max="3" step="0.1" value="0">
+                <output data-vertical-value>0.0</output>
+              </label>
+              <label class="lab-control">
+                <span>Check x</span>
+                <input data-transform-input type="range" min="-4" max="4" step="0.1" value="2">
+                <output data-transform-input-value>2.0</output>
+              </label>
+              <p class="lab-equation" data-transform-equation></p>
+              <canvas class="lab-canvas" data-transform-graph width="560" height="260" role="img" aria-label="Original and transformed function graphs"></canvas>
+              <p class="lab-result" data-transform-result aria-live="polite"></p>
+            </section>
+
+            <section class="lab-panel" aria-labelledby="composition-title">
+              <h3 id="composition-title">Composition: f(g(x))</h3>
+              <p class="lab-equation">g(x) = x + 1 &nbsp; then &nbsp; f(u) = u²</p>
+              <label class="lab-control">
+                <span>Input x</span>
+                <input data-composition-input type="range" min="-4" max="4" step="0.1" value="1">
+                <output data-composition-input-value>1.0</output>
+              </label>
+              <p class="lab-result" data-composition-result aria-live="polite"></p>
+            </section>
+          </div>
+        `;
+
+        const evaluate = (kind, x) => {
+          if (kind === "square") return x * x;
+          if (kind === "line") return 2 * x + 1;
+          if (kind === "absolute") return Math.abs(x);
+          return Math.sin(x);
+        };
+        const format = (value) => {
+          const rounded = Math.abs(value) < 0.005 ? 0 : value;
+          return rounded.toFixed(2);
+        };
+        const drawGraph = (canvas, functions, markerX) => {
+          const context = canvas.getContext("2d");
+          const width = canvas.width;
+          const height = canvas.height;
+          const xMin = -5;
+          const xMax = 5;
+          const yMin = -5;
+          const yMax = 5;
+          const mapX = (x) => (x - xMin) * width / (xMax - xMin);
+          const mapY = (y) => height - (y - yMin) * height / (yMax - yMin);
+
+          context.clearRect(0, 0, width, height);
+          context.font = "12px Arial";
+          context.lineWidth = 1;
+          context.strokeStyle = "#e8edf3";
+          for (let value = -4; value <= 4; value += 1) {
+            context.beginPath();
+            context.moveTo(mapX(value), 0);
+            context.lineTo(mapX(value), height);
+            context.moveTo(0, mapY(value));
+            context.lineTo(width, mapY(value));
+            context.stroke();
+          }
+          context.strokeStyle = "#758195";
+          context.beginPath();
+          context.moveTo(mapX(0), 0);
+          context.lineTo(mapX(0), height);
+          context.moveTo(0, mapY(0));
+          context.lineTo(width, mapY(0));
+          context.stroke();
+
+          for (const graph of functions) {
+            context.beginPath();
+            context.strokeStyle = graph.color;
+            context.lineWidth = 2.5;
+            context.setLineDash(graph.dashed ? [7, 5] : []);
+            let started = false;
+            for (let pixel = 0; pixel <= width; pixel += 1) {
+              const x = xMin + pixel * (xMax - xMin) / width;
+              const y = graph.fn(x);
+              if (!Number.isFinite(y) || y < yMin - 1 || y > yMax + 1) {
+                started = false;
+                continue;
+              }
+              if (!started) {
+                context.moveTo(pixel, mapY(y));
+                started = true;
+              } else {
+                context.lineTo(pixel, mapY(y));
+              }
+            }
+            context.stroke();
+          }
+          context.setLineDash([]);
+
+          const markerY = functions[functions.length - 1].fn(markerX);
+          if (Number.isFinite(markerY) && markerY >= yMin && markerY <= yMax) {
+            context.beginPath();
+            context.fillStyle = "#ff6b35";
+            context.arc(mapX(markerX), mapY(markerY), 5, 0, Math.PI * 2);
+            context.fill();
+          }
+        };
+
+        const functionSelect = lab.querySelector("[data-function]");
+        const functionInput = lab.querySelector("[data-input]");
+        const functionInputValue = lab.querySelector("[data-input-value]");
+        const functionEquation = lab.querySelector("[data-function-equation]");
+        const functionResult = lab.querySelector("[data-function-result]");
+        const functionLabels = {
+          square: "x²",
+          line: "2x + 1",
+          absolute: "|x|",
+          sine: "sin(x)",
+        };
+        const updateFunction = () => {
+          const x = Number(functionInput.value);
+          const value = evaluate(functionSelect.value, x);
+          functionInputValue.value = x.toFixed(1);
+          functionEquation.textContent = `f(x) = ${functionLabels[functionSelect.value]}`;
+          functionResult.textContent = `f(${x.toFixed(1)}) = ${format(value)}`;
+          drawGraph(lab.querySelector("[data-function-graph]"), [
+            { fn: (sample) => evaluate(functionSelect.value, sample), color: "#3366cc" },
+          ], x);
+        };
+        functionSelect.addEventListener("change", updateFunction);
+        functionInput.addEventListener("input", updateFunction);
+        updateFunction();
+
+        const baseSelect = lab.querySelector("[data-base-function]");
+        const stretchInput = lab.querySelector("[data-stretch]");
+        const horizontalInput = lab.querySelector("[data-horizontal]");
+        const verticalInput = lab.querySelector("[data-vertical]");
+        const transformInput = lab.querySelector("[data-transform-input]");
+        const transformEquation = lab.querySelector("[data-transform-equation]");
+        const transformResult = lab.querySelector("[data-transform-result]");
+        const updateTransform = () => {
+          const a = Number(stretchInput.value);
+          const h = Number(horizontalInput.value);
+          const k = Number(verticalInput.value);
+          const x = Number(transformInput.value);
+          const base = (sample) => evaluate(baseSelect.value, sample);
+          const transformed = (sample) => a * base(sample - h) + k;
+          const horizontalTerm = h < 0
+            ? `+ ${Math.abs(h).toFixed(1)}`
+            : `− ${h.toFixed(1)}`;
+          const verticalTerm = k < 0
+            ? `− ${Math.abs(k).toFixed(1)}`
+            : `+ ${k.toFixed(1)}`;
+
+          lab.querySelector("[data-stretch-value]").value = a.toFixed(1);
+          lab.querySelector("[data-horizontal-value]").value = h.toFixed(1);
+          lab.querySelector("[data-vertical-value]").value = k.toFixed(1);
+          lab.querySelector("[data-transform-input-value]").value = x.toFixed(1);
+          transformEquation.textContent = `y = ${a.toFixed(1)} · f(x ${horizontalTerm}) ${verticalTerm}`;
+          transformResult.textContent = `At x = ${x.toFixed(1)}: original f(x) = ${format(base(x))}; transformed y = ${format(transformed(x))}.`;
+          drawGraph(lab.querySelector("[data-transform-graph]"), [
+            { fn: base, color: "#8b98a8", dashed: true },
+            { fn: transformed, color: "#16a765" },
+          ], x);
+        };
+        for (const control of [baseSelect, stretchInput, horizontalInput, verticalInput, transformInput]) {
+          control.addEventListener("input", updateTransform);
+          control.addEventListener("change", updateTransform);
+        }
+        updateTransform();
+
+        const compositionInput = lab.querySelector("[data-composition-input]");
+        const compositionResult = lab.querySelector("[data-composition-result]");
+        const updateComposition = () => {
+          const x = Number(compositionInput.value);
+          const intermediate = x + 1;
+          const composed = intermediate * intermediate;
+          compositionInput.nextElementSibling.value = x.toFixed(1);
+          compositionResult.textContent = `Step 1: g(${x.toFixed(1)}) = ${intermediate.toFixed(2)}. Step 2: f(${intermediate.toFixed(2)}) = ${composed.toFixed(2)}. So (f ∘ g)(${x.toFixed(1)}) = ${composed.toFixed(2)}.`;
+        };
+        compositionInput.addEventListener("input", updateComposition);
+        updateComposition();
+
+        return lab;
+      }
+
+      async function loadGeneratedArticles() {
+        const response = await fetch("/materials/topics.json");
+        if (!response.ok) {
+          throw new Error(`Could not load topic list (HTTP ${response.status}).`);
+        }
+        const topicIds = await response.json();
+        if (
+          !Array.isArray(topicIds)
+          || topicIds.some((id) => typeof id !== "string" || !/^[a-z0-9-]+$/.test(id))
+        ) {
+          throw new Error("topics.json must contain an array of topic IDs.");
+        }
+        for (const topicId of topicIds) {
+          const topicResponse = await fetch(`/materials/${topicId}.json`);
+          if (!topicResponse.ok) {
+            throw new Error(`Could not load topic "${topicId}" (HTTP ${topicResponse.status}).`);
+          }
+          addGeneratedArticle(await topicResponse.json());
+        }
+      }
 
       function showPage(pageId, updateHistory) {
         const selectedId = pageIds.includes(pageId) ? pageId : "home";
@@ -504,32 +808,36 @@
         if (updateHistory) history.pushState({ pageId: selectedId }, "", `#${selectedId}`);
       }
 
-      for (const link of links) {
-        link.addEventListener("click", (event) => {
-          const pageId = link.dataset.pageLink;
-          if (!pageIds.includes(pageId)) return;
-          event.preventDefault();
-          showPage(pageId, true);
-        });
-      }
+      document.addEventListener("click", (event) => {
+        const link = event.target.closest("[data-page-link]");
+        if (!link || !pageIds.includes(link.dataset.pageLink)) return;
+        event.preventDefault();
+        showPage(link.dataset.pageLink, true);
+      });
 
-      for (const tab of tabs) {
-        tab.addEventListener("keydown", (event) => {
-          const index = Array.from(tabs).indexOf(tab);
-          let nextIndex;
-          if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
-          else if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
-          else if (event.key === "Home") nextIndex = 0;
-          else if (event.key === "End") nextIndex = tabs.length - 1;
-          else return;
-          event.preventDefault();
-          tabs[nextIndex].focus();
-          showPage(tabs[nextIndex].dataset.pageLink, true);
-        });
-      }
+      document.querySelector(".tabs").addEventListener("keydown", (event) => {
+        const tab = event.target.closest('[role="tab"]');
+        if (!tab) return;
+        const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+        const index = tabs.indexOf(tab);
+        let nextIndex;
+        if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+        else if (event.key === "Home") nextIndex = 0;
+        else if (event.key === "End") nextIndex = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        tabs[nextIndex].focus();
+        showPage(tabs[nextIndex].dataset.pageLink, true);
+      });
 
       window.addEventListener("popstate", () => showPage(location.hash.slice(1), false));
-      showPage(location.hash.slice(1), false);
+      loadGeneratedArticles()
+        .then(() => showPage(location.hash.slice(1), false))
+        .catch((error) => {
+          console.error("Generated articles could not be loaded:", error);
+          showPage(location.hash.slice(1), false);
+        });
     })();
   </script>
 </body>

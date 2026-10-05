@@ -1,0 +1,57 @@
+{
+  "id": "functions",
+  "title": "Functions",
+  "overview": "This guide covers the fundamental concepts of functions, including their representations, classifications, transformations, and the relationship between a function and its inverse.",
+  "interactive": "functions",
+  "sections": [
+    {
+      "heading": "Fundamentals of Functions",
+      "paragraphs": [
+        "A function is a mathematical rule that assigns a single output value to every input value from a specific set. The set of all valid inputs is known as the domain, while the set of resulting outputs is the range. Functions can be expressed through algebraic formulas, graphs, numerical tables, or verbal descriptions.",
+        "To determine if a curve in a coordinate plane is a function, the Vertical Line Test is used: if any vertical line intersects the curve more than once, the curve is not a function."
+      ],
+      "key_points": [
+        "Domain: The set of all possible input values.",
+        "Range: The set of all possible output values.",
+        "Vertical Line Test: A curve is a function if no vertical line crosses it more than once."
+      ]
+    },
+    {
+      "heading": "Classifying Functions",
+      "paragraphs": [
+        "Functions are categorized based on their behavior and symmetry. An increasing function rises from left to right, while a decreasing function falls. Symmetry is defined by parity: even functions are symmetric about the y-axis, and odd functions are symmetric about the origin.",
+        "Common function types include linear, power, polynomial, rational, trigonometric, exponential, and logarithmic functions. Functions that cannot be constructed using basic algebraic operations are termed transcendental functions."
+      ],
+      "key_points": [
+        "Even Function: Satisfies f(-x) = f(x).",
+        "Odd Function: Satisfies f(-x) = -f(x).",
+        "Transcendental Functions: Non-algebraic functions (e.g., trigonometric or exponential)."
+      ]
+    },
+    {
+      "heading": "Combining and Transforming Functions",
+      "paragraphs": [
+        "New functions can be created by performing arithmetic operations (addition, subtraction, multiplication, and division) on existing functions. Composition is another method where the output of one function becomes the input of another, denoted as (f ∘ g)(x) = f(g(x)).",
+        "Graphs can be modified through shifting (moving the graph vertically or horizontally), scaling (stretching or compressing the graph), and reflecting (flipping the graph across an axis)."
+      ],
+      "key_points": [
+        "Composition: Applying one function to the result of another.",
+        "Vertical Shift: Adding a constant to the output (f(x) + k).",
+        "Horizontal Shift: Adding a constant to the input (f(x + h)).",
+        "Reflection: Multiplying by -1 to flip across the x-axis (-f(x)) or y-axis (f(-x))."
+      ]
+    },
+    {
+      "heading": "Inverse Functions",
+      "paragraphs": [
+        "An inverse function 'undoes' the action of the original function. Only one-to-one functions—those where every output corresponds to exactly one input—possess an inverse. This property is verified using the Horizontal Line Test.",
+        "The graph of an inverse function is a reflection of the original function across the line y = x, effectively swapping the domain and range of the original function."
+      ],
+      "key_points": [
+        "One-to-One: A function where distinct inputs always produce distinct outputs.",
+        "Horizontal Line Test: A function is one-to-one if no horizontal line intersects its graph more than once.",
+        "Inverse Property: (f⁻¹ ∘ f)(x) = x and (f ∘ f⁻¹)(y) = y."
+      ]
+    }
+  ]
+}

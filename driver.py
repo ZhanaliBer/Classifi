@@ -4,12 +4,15 @@ from urllib.request import Request, urlopen
 from pathlib import Path
 import json
 import os
+import re
 import webbrowser
 
 
-HOST = "0.0.0.0"
+HOST = "0.0.0.0" if "PORT" in os.environ else "127.0.0.1"
 PORT = int(os.environ.get("PORT", "8000"))
 PAGE = Path(__file__).resolve().with_name("driver.html")
+MATERIALS_DIR = Path(__file__).resolve().parent / "materials"
+TOPICS_FILE = MATERIALS_DIR / "topics.json"
 ENV_FILE = Path(__file__).resolve().with_name(".env")
 
 
@@ -92,14 +95,28 @@ def send_json(handler: BaseHTTPRequestHandler, status: int, message: str) -> Non
 
 class PageHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
-        if self.path not in ("/", "/driver.html"):
+        if self.path == "/materials/topics.json":
+            content = TOPICS_FILE.read_bytes()
+            content_type = "application/json; charset=utf-8"
+        elif re.fullmatch(r"/materials/[a-z0-9-]+\.json", self.path):
+            topic_file = MATERIALS_DIR / self.path.rsplit("/", 1)[1]
+            if not topic_file.is_file():
+                self.send_error(404, "Topic not found")
+                return
+            content = topic_file.read_bytes()
+            content_type = "application/json; charset=utf-8"
+        elif self.path in ("/", "/driver.html"):
+            content = PAGE.read_bytes()
+            content_type = "text/html; charset=utf-8"
+        else:
             self.send_error(404, "Page not found")
             return
 
-        content = PAGE.read_bytes()
         self.send_response(200)
-        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(content)))
+        if self.path.startswith("/materials/"):
+            self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(content)
 
@@ -119,7 +136,7 @@ def main() -> None:
     server = ThreadingHTTPServer((HOST, PORT), PageHandler)
     url = f"http://127.0.0.1:{PORT}/"
     print(f"Serving Midterm Calculus at {url}")
-    if not os.environ.get("RENDER"):
+    if "PORT" not in os.environ:
         print("Press Ctrl+C to stop the server.")
         webbrowser.open(url)
 
