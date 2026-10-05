@@ -266,6 +266,17 @@
       padding-top: 3px;
     }
 
+    .formula-line mjx-container[display="true"] {
+      margin: 0 !important;
+    }
+
+    .math-renderer-status {
+      margin: 10px 0;
+      padding: 10px 14px;
+      border-left: 4px solid #c77d00;
+      background: #fff8e6;
+    }
+
     .study-interactive {
       margin: 18px 0 22px;
       padding: 16px;
@@ -487,6 +498,9 @@
     </aside>
 
     <main>
+      <p class="math-renderer-status" id="math-renderer-status" role="status" hidden>
+        Не удалось загрузить математическую вёрстку; формулы показаны в текстовом виде.
+      </p>
       <div class="tabs" role="tablist" aria-label="Midterm Calculus topics">
         <button class="tab" id="tab-home" type="button" role="tab" aria-selected="true" aria-controls="page-home" data-page-link="home">Midterm Calculus</button>
       </div>
@@ -507,6 +521,16 @@
 
   <script>
     (() => {
+      window.MathJax = {
+        startup: { typeset: false },
+        tex: {
+          inlineMath: [["\\(", "\\)"]],
+          displayMath: [["\\[", "\\]"]],
+          packages: { "[+]": ["ams"] },
+        },
+        svg: { fontCache: "global" },
+      };
+
       const pinger = document.getElementById("api-pinger");
       const pingerLabel = document.getElementById("pinger-label");
       const pingerStatus = document.getElementById("pinger-status");
@@ -607,6 +631,101 @@
       };
 
       const pageIds = ["home"];
+      let mathRendererPromise;
+
+      function loadMathRenderer() {
+        if (!mathRendererPromise) {
+          mathRendererPromise = new Promise((resolve, reject) => {
+            const script = document.createElement("script");
+            script.src = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js";
+            script.async = true;
+            script.onload = () => resolve(window.MathJax.startup.promise);
+            script.onerror = () => reject(new Error("MathJax could not be loaded."));
+            document.head.append(script);
+          });
+        }
+        return mathRendererPromise;
+      }
+
+      function legacyFormulaToTex(source) {
+        const superscripts = {
+          "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4",
+          "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9",
+          "⁺": "+", "⁻": "-", "⁼": "=", "⁽": "(", "⁾": ")",
+          "ⁿ": "n", "ⁱ": "i",
+        };
+        const subscripts = {
+          "₀": "0", "₁": "1", "₂": "2", "₃": "3", "₄": "4",
+          "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
+          "ₐ": "a", "ₑ": "e", "ₒ": "o", "ₓ": "x", "ₙ": "n",
+        };
+        const knownWords = {
+          arcsin: "\\arcsin", arccos: "\\arccos", arctan: "\\arctan",
+          sin: "\\sin", cos: "\\cos", tan: "\\tan", cot: "\\cot",
+          sec: "\\sec", csc: "\\csc", ln: "\\ln", log: "\\log",
+          lim: "\\lim", exp: "\\exp",
+        };
+        let tex = source
+          .replace(/d\/d([a-z])/gi, "\\frac{d}{d$1}")
+          .replace(/lim\s*\(([^()]*)\)/g, "\\lim_{$1}")
+          .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ]+/g, (value) =>
+            `^{${Array.from(value, (character) => superscripts[character]).join("")}}`)
+          .replace(/[₀₁₂₃₄₅₆₇₈₉ₐₑₒₓₙ]+/g, (value) =>
+            `_{${Array.from(value, (character) => subscripts[character]).join("")}}`)
+          .replace(/∫/g, "\\int ")
+          .replace(/√\(([^()]*)\)/g, "\\sqrt{$1}")
+          .replace(/√([a-zA-Z0-9]+)/g, "\\sqrt{$1}")
+          .replace(/π/g, "\\pi ")
+          .replace(/ε/g, "\\varepsilon ")
+          .replace(/δ/g, "\\delta ")
+          .replace(/Δ/g, "\\Delta ")
+          .replace(/∞/g, "\\infty ")
+          .replace(/∈/g, "\\in ")
+          .replace(/∪/g, "\\cup ")
+          .replace(/∩/g, "\\cap ")
+          .replace(/⇒/g, "\\Rightarrow ")
+          .replace(/→/g, "\\to ")
+          .replace(/≈/g, "\\approx ")
+          .replace(/≤/g, "\\le ")
+          .replace(/≥/g, "\\ge ")
+          .replace(/≠/g, "\\ne ")
+          .replace(/±/g, "\\pm ")
+          .replace(/·/g, "\\cdot ")
+          .replace(/ℝ/g, "\\mathbb{R}")
+          .replace(/′/g, "'")
+          .replace(/−/g, "-")
+          .replace(/([a-zA-Z][a-zA-Z']*\([^()]*\))\s*\/\s*([a-zA-Z][a-zA-Z']*\([^()]*\))/g, "\\frac{$1}{$2}")
+          .replace(/\[([^\]]+)\]\s*\/\s*\(([^()]*)\)/g, "\\frac{$1}{$2}")
+          .replace(/\(([^()]*)\)\s*\/\s*\(([^()]*)\)/g, "\\frac{$1}{$2}")
+          .replace(/\b([a-zA-Z][a-zA-Z0-9']*)\/([a-zA-Z][a-zA-Z0-9']*)\b/g, "\\frac{$1}{$2}")
+          .replace(/\b([0-9]+)\/([0-9]+)\b/g, "\\frac{$1}{$2}");
+
+        tex = tex.replace(/[A-Za-z]+|[А-Яа-яЁё]+/g, (word, offset, whole) => {
+          if (offset > 0 && whole[offset - 1] === "\\") return word;
+          if (/[А-Яа-яЁё]/.test(word)) return `\\text{${word}}\\ `;
+          if (knownWords[word]) return knownWords[word];
+          if (word.length === 1) return word;
+          return `\\text{${word}}\\ `;
+        });
+        return tex;
+      }
+
+      function appendTextWithMath(element, text) {
+        const expression = /lim\s*\([^()\n]*\)|[A-Za-z]{1,4}(?:′{1,2}|″)?\([^()\n]*\)(?:′{1,2}|″)?|[A-Za-z](?:′{1,2}|″)|[A-Za-z][⁰¹²³⁴⁵⁶⁷⁸⁹ⁿⁱ]+|[A-Za-z]\s*(?:=|>|<|≤|≥|≠|∈|→|⇒)\s*[-+]?[\wπ∞√²³⁻⁺ⁿₐₑₒₓₙ₀₁₂₃₄₅₆₇₈₉()./|,]+|(?:\d+|[A-Za-z])\/(?:\d+|[A-Za-z])|√\([^()\n]*\)/g;
+        let lastIndex = 0;
+        for (const match of text.matchAll(expression)) {
+          if (match.index > lastIndex) {
+            element.append(document.createTextNode(text.slice(lastIndex, match.index)));
+          }
+          const math = document.createElement("span");
+          math.className = "math-inline";
+          math.dataset.originalMath = match[0];
+          math.textContent = `\\(${legacyFormulaToTex(match[0])}\\)`;
+          element.append(math);
+          lastIndex = match.index + match[0].length;
+        }
+        element.append(document.createTextNode(text.slice(lastIndex)));
+      }
 
       function addGeneratedArticle(article) {
         if (
@@ -694,7 +813,7 @@
           if (Array.isArray(section.paragraphs)) {
             for (const text of section.paragraphs) {
               const paragraph = document.createElement("p");
-              paragraph.textContent = text;
+              appendTextWithMath(paragraph, text);
               page.append(paragraph);
             }
           }
@@ -706,7 +825,8 @@
               for (const line of text.split("\n")) {
                 const formulaLine = document.createElement("span");
                 formulaLine.className = "formula-line";
-                formulaLine.textContent = line;
+                formulaLine.dataset.originalMath = line;
+                formulaLine.textContent = `\\[${legacyFormulaToTex(line)}\\]`;
                 formula.append(formulaLine);
               }
               page.append(formula);
@@ -729,7 +849,7 @@
             steps.className = "solution-steps";
             for (const text of section.steps) {
               const item = document.createElement("li");
-              item.textContent = text;
+              appendTextWithMath(item, text);
               steps.append(item);
             }
             page.append(steps);
@@ -744,7 +864,7 @@
             const list = document.createElement("ul");
             for (const text of section.key_points) {
               const item = document.createElement("li");
-              item.textContent = text;
+              appendTextWithMath(item, text);
               list.append(item);
             }
             check.append(checkHeading, list);
@@ -1555,6 +1675,18 @@
             throw new Error(`Could not load topic "${topicId}" (HTTP ${topicResponse.status}).`);
           }
           addGeneratedArticle(await topicResponse.json());
+        }
+        try {
+          await loadMathRenderer();
+          await window.MathJax.typesetPromise(
+            Array.from(document.querySelectorAll(".formula, .math-inline")),
+          );
+        } catch (error) {
+          document.getElementById("math-renderer-status").hidden = false;
+          for (const element of document.querySelectorAll("[data-original-math]")) {
+            element.replaceChildren(document.createTextNode(element.dataset.originalMath));
+          }
+          console.error("Mathematical notation could not be typeset:", error);
         }
       }
 
