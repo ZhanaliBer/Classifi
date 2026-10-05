@@ -23,7 +23,7 @@
       margin: 0;
       color: var(--ink);
       background: var(--canvas);
-      font: 16px/1.65 Georgia, "Times New Roman", serif;
+      font: 16px/1.65 "Segoe UI", "Aptos", Arial, sans-serif;
     }
 
     a { color: var(--blue); }
@@ -249,11 +249,95 @@
     .formula {
       overflow-x: auto;
       margin: 14px 0;
-      padding: 13px 16px;
-      border: 1px solid #eaecf0;
-      background: #f8f9fa;
-      font: 17px/1.6 "Cambria Math", Cambria, Georgia, serif;
-      text-align: center;
+      padding: 12px 18px;
+      border: 1px solid #d9e2ee;
+      border-left: 4px solid #36c;
+      background: #f7f9fc;
+      font: 18px/1.75 "Cambria Math", "STIX Two Math", Cambria, Georgia, serif;
+      text-align: left;
+      overflow-wrap: anywhere;
+    }
+
+    .formula-line {
+      display: block;
+    }
+
+    .formula-line + .formula-line {
+      padding-top: 3px;
+    }
+
+    .study-interactive {
+      margin: 18px 0 22px;
+      padding: 16px;
+      border: 1px solid #d9e2ee;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #fbfdff, #f5f8fc);
+    }
+
+    .study-interactive h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .study-interactive .study-prompt {
+      margin: 0 0 12px;
+      color: #54595d;
+      font: 13px/1.45 "Segoe UI", "Aptos", Arial, sans-serif;
+    }
+
+    .study-interactive .study-control {
+      display: grid;
+      grid-template-columns: minmax(120px, 190px) minmax(130px, 1fr) 70px;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+      font: 14px/1.4 "Segoe UI", "Aptos", Arial, sans-serif;
+    }
+
+    .study-interactive .study-control output {
+      color: #174ea6;
+      font: 700 13px/1.3 Consolas, monospace;
+      text-align: right;
+    }
+
+    .study-interactive canvas {
+      display: block;
+      width: min(100%, 760px);
+      height: auto;
+      margin: 14px auto 0;
+      border: 1px solid #e1e7ef;
+      border-radius: 5px;
+      background: #fff;
+    }
+
+    .study-interactive .study-result {
+      max-width: 760px;
+      min-height: 24px;
+      margin: 10px auto 0;
+      color: #344054;
+      font: 14px/1.5 "Segoe UI", "Aptos", Arial, sans-serif;
+    }
+
+    @media (max-width: 560px) {
+      .study-interactive .study-control {
+        grid-template-columns: 1fr 64px;
+      }
+      .study-interactive .study-control input {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+    }
+
+    .solution-steps {
+      margin: 14px 0 18px;
+      padding: 14px 20px 14px 42px;
+      border-left: 4px solid #36c;
+      background: #f5f8fc;
+    }
+
+    .solution-steps li {
+      padding-left: 4px;
+      margin: 7px 0;
     }
 
     .note {
@@ -329,6 +413,8 @@
       color: #3b4654;
       font: 14px/1.55 Arial, sans-serif;
     }
+
+    .lab-canvas--circle { max-width: 280px; margin-inline: auto; }
 
     .page-footer {
       padding: 12px 22px;
@@ -434,6 +520,75 @@
         }
       });
 
+      const studyVisuals = {
+        "limit-rate-tangent": {
+          caption: "Секущая (синяя) приближается к касательной (оранжевая), когда вторая точка стремится к первой.",
+        },
+        "limit-epsilon-delta": {
+          caption: "Определение ε–δ: удерживаем f(x) в полосе вокруг L, ограничив x полосой вокруг a.",
+        },
+        "limit-one-sided": {
+          caption: "Односторонние пределы: слева график стремится к −1, справа — к 1; общего предела нет.",
+        },
+        "limit-continuity": {
+          caption: "Непрерывность в a требует совпадения предела и значения функции: здесь у графика дырка.",
+        },
+        "limit-asymptotes": {
+          caption: "Гипербола приближается к пунктирным вертикальной и горизонтальной асимптотам.",
+        },
+        "derivative-tangent": {
+          caption: "Производная в точке равна наклону касательной; здесь касательная касается кривой в (a, f(a)).",
+        },
+        "derivative-rules": {
+          caption: "Настрой x и сравни значение функции с производной, полученной по правилу произведения.",
+        },
+        "derivative-trig": {
+          caption: "Производные синуса и косинуса сдвигают волну: (sin x)′=cos x, (cos x)′=−sin x.",
+        },
+        "derivative-inverse-trig": {
+          caption: "Графики обратных тригонометрических функций показывают их области: arcsin x задана только при −1≤x≤1.",
+        },
+        "derivative-chain": {
+          caption: "Цепное правило: дифференцируем внешний слой, затем умножаем на производную внутреннего.",
+        },
+        "derivative-implicit": {
+          caption: "Неявная кривая x²+y²=25: касательная наклонена, и её наклон зависит от точки.",
+        },
+        "derivative-inverse": {
+          caption: "Графики взаимно обратных функций отражаются относительно прямой y=x; координаты точек меняются местами.",
+        },
+        "derivative-related-rates": {
+          caption: "Радиус круга меняется со временем; площадь зависит от радиуса, поэтому скорости связаны цепным правилом.",
+        },
+        "derivative-linearization": {
+          caption: "Линеаризация L(x) — касательная, используемая для оценки функции рядом с x=a.",
+        },
+        "application-extrema": {
+          caption: "На замкнутом отрезке сравни значения функции в концах и во всех внутренних критических точках.",
+        },
+        "application-mvt": {
+          caption: "Теорема о среднем: внутри отрезка существует касательная, параллельная секущей через концы.",
+        },
+        "application-lhopital": {
+          caption: "Сначала проверь неопределённость: правило Лопиталя применяется прямо только для 0/0 или ∞/∞.",
+        },
+        "application-sign-chart": {
+          caption: "Знак первой производной на каждом интервале определяет рост, убывание и тип критической точки.",
+        },
+        "application-concavity": {
+          caption: "Точка перегиба отмечается только там, где меняется знак второй производной и меняется направление изгиба.",
+        },
+        "application-optimization": {
+          caption: "Оптимизация прямоугольника: ограничение связывает стороны, целевая функция — площадь.",
+        },
+        "application-newton": {
+          caption: "Метод Ньютона: касательная в текущем приближении пересекает ось x в следующем приближении.",
+        },
+        "application-antiderivative": {
+          caption: "Определённый интеграл — ориентированная площадь между графиком и осью x.",
+        }
+      };
+
       const pageIds = ["home"];
 
       function addGeneratedArticle(article) {
@@ -450,6 +605,12 @@
             || (section.paragraphs !== undefined
               && (!Array.isArray(section.paragraphs)
                 || section.paragraphs.some((text) => typeof text !== "string")))
+            || (section.formulas !== undefined
+              && (!Array.isArray(section.formulas)
+                || section.formulas.some((text) => typeof text !== "string")))
+            || (section.steps !== undefined
+              && (!Array.isArray(section.steps)
+                || section.steps.some((text) => typeof text !== "string")))
             || (section.key_points !== undefined
               && (!Array.isArray(section.key_points)
                 || section.key_points.some((text) => typeof text !== "string")))
@@ -518,6 +679,35 @@
             }
           }
 
+          if (Array.isArray(section.formulas)) {
+            for (const text of section.formulas) {
+              const formula = document.createElement("p");
+              formula.className = "formula";
+              for (const line of text.split("\n")) {
+                const formulaLine = document.createElement("span");
+                formulaLine.className = "formula-line";
+                formulaLine.textContent = line;
+                formula.append(formulaLine);
+              }
+              page.append(formula);
+            }
+          }
+
+          if (Array.isArray(section.steps) && section.steps.length) {
+            const stepsHeading = document.createElement("h3");
+            stepsHeading.textContent = "Порядок действий";
+            page.append(stepsHeading);
+
+            const steps = document.createElement("ol");
+            steps.className = "solution-steps";
+            for (const text of section.steps) {
+              const item = document.createElement("li");
+              item.textContent = text;
+              steps.append(item);
+            }
+            page.append(steps);
+          }
+
           if (Array.isArray(section.key_points) && section.key_points.length) {
             const list = document.createElement("ul");
             for (const text of section.key_points) {
@@ -529,12 +719,413 @@
           }
         }
 
-        if (article.interactive === "functions") {
-          page.append(createFormulaLab());
-        }
-
         document.querySelector("main").append(page);
         pageIds.push(pageId);
+      }
+
+      function createStudyInteractive(type, caption) {
+        const settings = {
+          "limit-rate-tangent": ["Секущая → касательная", "Расстояние h", 0.15, 2.5, 0.05, 1.5, "h"],
+          "limit-epsilon-delta": ["Проверка ε–δ", "Выбранное δ", 0.05, 1.5, 0.05, 0.5, "δ"],
+          "limit-one-sided": ["Односторонний предел", "Расстояние |x−a|", 0.05, 2, 0.05, 1.2, "|x−a|"],
+          "limit-continuity": ["Непрерывность в точке", "Значение f(a)", -1, 5, 0.1, 1, "f(a)"],
+          "limit-asymptotes": ["Приближение к асимптоте", "Расстояние до x = 0", 0.15, 3, 0.05, 1, "x"],
+          "derivative-tangent": ["Наклон касательной", "Точка a", -2.5, 2.5, 0.1, 1, "a"],
+          "derivative-rules": ["Правило произведения", "Вход x", -3, 3, 0.1, 1, "x"],
+          "derivative-trig": ["Синус и его производная", "Угол x (радианы)", 0, 6.28, 0.05, 1, "x"],
+          "derivative-inverse-trig": ["Обратные тригонометрические", "Вход x", -0.95, 0.95, 0.05, 0.5, "x"],
+          "derivative-chain": ["Цепное правило", "Вход x", -1.5, 1.5, 0.05, 0.7, "x"],
+          "derivative-implicit": ["Неявная производная", "Координата x", -4.5, 4.5, 0.1, 3, "x"],
+          "derivative-inverse": ["Функция и обратная", "Вход x", -2, 2, 0.1, 1, "x"],
+          "derivative-related-rates": ["Связанные скорости", "Радиус r", 0.5, 4, 0.1, 2, "r"],
+          "derivative-linearization": ["Линеаризация", "Точка x", 3, 5, 0.05, 4.5, "x"],
+          "application-extrema": ["Абсолютные экстремумы", "Положение x", 0, 5, 0.05, 2, "x"],
+          "application-mvt": ["Теорема о среднем", "Правый конец b", 1, 5, 0.1, 3, "b"],
+          "application-sign-chart": ["Знак первой производной", "Положение x", -2, 2, 0.05, 0, "x"],
+          "application-concavity": ["Выпуклость и перегиб", "Положение x", -3, 3, 0.05, 0, "x"],
+          "application-lhopital": ["Правило Лопиталя", "Близость к нулю x", 0.1, 2, 0.05, 1, "x"],
+          "application-optimization": ["Интерактивная оптимизация", "Ширина x", 0, 10, 0.1, 5, "x"],
+          "application-newton": ["Итерации Ньютона", "Номер шага", 0, 6, 1, 0, "n"],
+          "application-antiderivative": ["Накопленная площадь", "Верхняя граница b", 0.5, 4, 0.1, 2, "b"],
+        }[type];
+
+        if (!settings) {
+          throw new Error(`Unknown study interactive: ${type}`);
+        }
+
+        const [title, controlLabel, min, max, step, initial, symbol] = settings;
+        const panel = document.createElement("section");
+        panel.className = "study-interactive";
+        panel.setAttribute("role", "group");
+        panel.setAttribute("aria-label", title);
+        const heading = document.createElement("h3");
+        heading.textContent = title;
+        const prompt = document.createElement("p");
+        prompt.className = "study-prompt";
+        prompt.textContent = caption;
+        const control = document.createElement("label");
+        control.className = "study-control";
+        const controlName = document.createElement("span");
+        controlName.textContent = controlLabel;
+        const input = document.createElement("input");
+        input.type = "range";
+        input.min = String(min);
+        input.max = String(max);
+        input.step = String(step);
+        input.value = String(initial);
+        input.setAttribute("aria-label", controlLabel);
+        const output = document.createElement("output");
+        output.value = String(initial);
+        control.append(controlName, input, output);
+        const canvas = document.createElement("canvas");
+        canvas.width = 640;
+        canvas.height = 250;
+        canvas.setAttribute("role", "img");
+        canvas.setAttribute("aria-label", title);
+        const result = document.createElement("p");
+        result.className = "study-result";
+        result.setAttribute("aria-live", "polite");
+        panel.append(heading, prompt, control, canvas, result);
+        const format = (value, digits = 3) => {
+          if (!Number.isFinite(value)) return "не определено";
+          const rounded = Math.abs(value) < 0.5 * 10 ** -digits ? 0 : value;
+          return Number(rounded.toFixed(digits)).toString();
+        };
+
+        const draw = (config) => {
+          const context = canvas.getContext("2d");
+          const width = canvas.width;
+          const height = canvas.height;
+          const { xMin, xMax, yMin, yMax, curves = [], points = [], verticals = [], horizontals = [], area } = config;
+          const mapX = (x) => (x - xMin) * width / (xMax - xMin);
+          const mapY = (y) => height - (y - yMin) * height / (yMax - yMin);
+
+          context.clearRect(0, 0, width, height);
+          context.font = "12px Arial";
+          context.strokeStyle = "#e8edf3";
+          context.lineWidth = 1;
+          for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x += 1) {
+            context.beginPath();
+            context.moveTo(mapX(x), 0);
+            context.lineTo(mapX(x), height);
+            context.stroke();
+          }
+          for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y += 1) {
+            context.beginPath();
+            context.moveTo(0, mapY(y));
+            context.lineTo(width, mapY(y));
+            context.stroke();
+          }
+          context.strokeStyle = "#758195";
+          context.beginPath();
+          if (yMin <= 0 && yMax >= 0) {
+            context.moveTo(0, mapY(0));
+            context.lineTo(width, mapY(0));
+          }
+          if (xMin <= 0 && xMax >= 0) {
+            context.moveTo(mapX(0), 0);
+            context.lineTo(mapX(0), height);
+          }
+          context.stroke();
+
+          for (const x of verticals) {
+            context.beginPath();
+            context.setLineDash([6, 5]);
+            context.strokeStyle = "#f97316";
+            context.moveTo(mapX(x), 0);
+            context.lineTo(mapX(x), height);
+            context.stroke();
+          }
+          for (const y of horizontals) {
+            context.beginPath();
+            context.setLineDash([6, 5]);
+            context.strokeStyle = "#16a765";
+            context.moveTo(0, mapY(y));
+            context.lineTo(width, mapY(y));
+            context.stroke();
+          }
+          context.setLineDash([]);
+
+          if (area) {
+            context.beginPath();
+            context.moveTo(mapX(area.start), mapY(area.baseline || 0));
+            for (let pixel = 0; pixel <= width; pixel += 1) {
+              const x = xMin + pixel * (xMax - xMin) / width;
+              if (x >= area.start && x <= area.end) {
+                const y = area.fn(x);
+                if (Number.isFinite(y) && y >= yMin && y <= yMax) {
+                  context.lineTo(pixel, mapY(y));
+                }
+              }
+            }
+            context.lineTo(mapX(area.end), mapY(area.baseline || 0));
+            context.closePath();
+            context.fillStyle = "#93c5fd88";
+            context.fill();
+          }
+
+          for (const curve of curves) {
+            context.beginPath();
+            context.strokeStyle = curve.color || "#2563eb";
+            context.lineWidth = curve.width || 3;
+            context.setLineDash(curve.dashed ? [7, 5] : []);
+            let started = false;
+            let previousY = null;
+            for (let pixel = 0; pixel <= width; pixel += 1) {
+              const x = xMin + pixel * (xMax - xMin) / width;
+              const y = curve.fn(x);
+              if (!Number.isFinite(y) || y < yMin - 1 || y > yMax + 1
+                || (previousY !== null && Math.abs(y - previousY) > (yMax - yMin) * 0.5)) {
+                started = false;
+                previousY = null;
+                continue;
+              }
+              if (!started) {
+                context.moveTo(pixel, mapY(y));
+                started = true;
+              } else {
+                context.lineTo(pixel, mapY(y));
+              }
+              previousY = y;
+            }
+            context.stroke();
+          }
+          context.setLineDash([]);
+
+          for (const point of points) {
+            if (!Number.isFinite(point.x) || !Number.isFinite(point.y)
+              || point.x < xMin || point.x > xMax || point.y < yMin || point.y > yMax) continue;
+            context.beginPath();
+            context.fillStyle = point.color || "#f97316";
+            context.arc(mapX(point.x), mapY(point.y), 6, 0, Math.PI * 2);
+            context.fill();
+          }
+        };
+
+        const update = () => {
+          const value = Number(input.value);
+          output.value = `${symbol} = ${format(value, type === "application-newton" ? 0 : 2)}`;
+          let config;
+          let message;
+          const line = (fn, color = "#f97316", dashed = false) => ({ fn, color, dashed });
+          const point = (x, y, color) => ({ x, y, color });
+
+          switch (type) {
+            case "limit-rate-tangent": {
+              const a = 1;
+              const f = (x) => x * x / 3;
+              const slope = (f(a + value) - f(a)) / value;
+              config = { xMin: -2, xMax: 4, yMin: -1, yMax: 6, curves: [
+                line(f, "#2563eb"),
+                line((x) => f(a) + slope * (x - a), "#16a765", true),
+                line((x) => f(a) + (2 * a / 3) * (x - a), "#f97316"),
+              ], points: [point(a, f(a)), point(a + value, f(a + value))] };
+              message = `h = ${format(value, 2)}; наклон секущей = ${format(slope)}. При h → 0 он стремится к наклону касательной f′(1) = 2/3.`;
+              break;
+            }
+            case "limit-epsilon-delta": {
+              const epsilon = 1;
+              const valid = 2 * value < epsilon;
+              config = { xMin: -2, xMax: 2, yMin: -2, yMax: 6,
+                curves: [line((x) => 2 * x + 1)],
+                verticals: [-value, value], horizontals: [1 - epsilon, 1 + epsilon],
+                points: [point(0, 1)] };
+              message = `ε = 1, δ = ${format(value, 2)}. Для f(x)=2x+1 нужно 2δ < ε: ${valid ? "условие выполнено" : "δ слишком велико"}.`;
+              break;
+            }
+            case "limit-one-sided": {
+              const distance = value;
+              config = { xMin: -2, xMax: 2, yMin: -2, yMax: 2, curves: [
+                line((x) => x < 0 ? -1 : Number.NaN, "#2563eb"),
+                line((x) => x > 0 ? 1 : Number.NaN, "#f97316"),
+              ], points: [point(-distance, -1), point(distance, 1)] };
+              message = `Выбранные точки: x=${format(-distance, 2)} слева и x=${format(distance, 2)} справа. Их функции равны −1 и 1 соответственно, поэтому общего предела нет.`;
+              break;
+            }
+            case "limit-continuity": {
+              const f = (x) => x * x;
+              config = { xMin: -2, xMax: 4, yMin: -1, yMax: 10,
+                curves: [line(f)], points: [point(1, 1, "#2563eb"), point(1, value)] };
+              message = `lim(x→1) x² = 1, а заданное f(1) = ${format(value, 2)}. ${Math.abs(value - 1) < 1e-8 ? "Функция непрерывна при x=1." : "Есть разрыв: предел не равен значению функции."}`;
+              break;
+            }
+            case "limit-asymptotes": {
+              const f = (x) => x === 0 ? Number.NaN : 1 / x;
+              config = { xMin: -4, xMax: 4, yMin: -5, yMax: 5,
+                curves: [line(f)], verticals: [0], horizontals: [0],
+                points: [point(value, 1 / value)] };
+              message = `При x=${format(value, 2)} значение 1/x=${format(1 / value)}; при x→0⁺ график неограниченно растёт. Асимптоты: x=0 и y=0.`;
+              break;
+            }
+            case "derivative-tangent": {
+              const f = (x) => x * x;
+              const slope = 2 * value;
+              config = { xMin: -3, xMax: 3, yMin: -2, yMax: 9,
+                curves: [line(f), line((x) => f(value) + slope * (x - value), "#f97316")],
+                points: [point(value, f(value))] };
+              message = `В точке a=${format(value, 2)}: f′(a)=2a=${format(slope, 2)}. Касательная: y=${format(slope, 2)}(x−${format(value, 2)})+${format(f(value), 2)}.`;
+              break;
+            }
+            case "derivative-rules": {
+              const f = (x) => x * x * Math.sin(x);
+              const derivative = 2 * value * Math.sin(value) + value * value * Math.cos(value);
+              config = { xMin: -3, xMax: 3, yMin: -10, yMax: 10,
+                curves: [line(f)], points: [point(value, f(value))] };
+              message = `Для x²sin(x): u′v+uv′ = 2x·sin(x)+x²·cos(x). При x=${format(value, 2)}: f=${format(f(value))}, f′=${format(derivative)}.`;
+              break;
+            }
+            case "derivative-trig": {
+              config = { xMin: -2 * Math.PI, xMax: 2 * Math.PI, yMin: -1.5, yMax: 1.5,
+                curves: [line(Math.sin), line(Math.cos, "#f97316", true)],
+                points: [point(value, Math.sin(value)), point(value, Math.cos(value), "#16a765")] };
+              message = `При x=${format(value, 2)}: sin(x)=${format(Math.sin(value))}, производная cos(x)=${format(Math.cos(value))}.`;
+              break;
+            }
+            case "derivative-inverse-trig": {
+              config = { xMin: -1, xMax: 1, yMin: -2, yMax: 2,
+                curves: [line((x) => Math.asin(x)), line((x) => Math.atan(x), "#16a765", true)],
+                points: [point(value, Math.asin(value)), point(value, Math.atan(value), "#16a765")] };
+              message = `arcsin′(${format(value, 2)})=${format(1 / Math.sqrt(1 - value * value))}; arctan′(${format(value, 2)})=${format(1 / (1 + value * value))}.`;
+              break;
+            }
+            case "derivative-chain": {
+              const f = (x) => (x * x + 1) ** 3;
+              const derivative = 6 * value * (value * value + 1) ** 2;
+              config = { xMin: -1.6, xMax: 1.6, yMin: 0, yMax: 18,
+                curves: [line(f)], points: [point(value, f(value))] };
+              message = `(x²+1)³: внешняя производная 3(x²+1)², внутренняя 2x; итог f′(x)=6x(x²+1)²=${format(derivative)} при x=${format(value, 2)}.`;
+              break;
+            }
+            case "derivative-implicit": {
+              const y = Math.sqrt(Math.max(0, 25 - value * value));
+              const slope = y === 0 ? Number.NaN : -value / y;
+              config = { xMin: -5, xMax: 5, yMin: -5, yMax: 5,
+                curves: [line((x) => Math.sqrt(Math.max(0, 25 - x * x))),
+                  line((x) => -Math.sqrt(Math.max(0, 25 - x * x)), "#2563eb")],
+                points: [point(value, y)] };
+              message = `Из x²+y²=25: y′=−x/y. В точке (${format(value, 2)}, ${format(y, 2)}) наклон ${format(slope)}.`;
+              break;
+            }
+            case "derivative-inverse": {
+              config = { xMin: -2, xMax: 2, yMin: -2, yMax: 2,
+                curves: [line((x) => x ** 3), line((x) => Math.cbrt(x), "#f97316"),
+                  line((x) => x, "#64748b", true)],
+                points: [point(value, value ** 3), point(value ** 3, value, "#f97316")] };
+              message = `f(${format(value, 2)})=${format(value ** 3)}; f⁻¹(${format(value ** 3)})=${format(value, 2)}. Графики отражаются относительно y=x.`;
+              break;
+            }
+            case "derivative-related-rates": {
+              const radius = value;
+              const area = Math.PI * radius * radius;
+              const areaRate = 2 * Math.PI * radius * 2;
+              config = { xMin: 0, xMax: 4.5, yMin: 0, yMax: 70,
+                curves: [line((r) => Math.PI * r * r)],
+                points: [point(radius, area)] };
+              message = `При dr/dt=2: A=πr²=${format(area)}; dA/dt=2πr·dr/dt=${format(areaRate)} единиц²/время.`;
+              break;
+            }
+            case "derivative-linearization": {
+              const f = (x) => Math.sqrt(x);
+              const approximation = 2 + (value - 4) / 4;
+              config = { xMin: 3, xMax: 5, yMin: 1.5, yMax: 2.5,
+                curves: [line(f), line((x) => 2 + (x - 4) / 4, "#f97316", true)],
+                points: [point(value, f(value)), point(value, approximation, "#f97316")] };
+              message = `Около a=4: L(x)=2+(x−4)/4. При x=${format(value, 2)}: √x=${format(f(value))}, линейная оценка=${format(approximation)}, ошибка=${format(Math.abs(f(value) - approximation))}.`;
+              break;
+            }
+            case "application-extrema": {
+              const f = (x) => x * x - 4 * x;
+              config = { xMin: 0, xMax: 5, yMin: -5, yMax: 7,
+                curves: [line(f)], verticals: [2],
+                points: [point(0, f(0)), point(2, f(2)), point(5, f(5)), point(value, f(value), "#7c3aed")] };
+              message = `При выбранном x=${format(value, 2)}: f(x)=${format(f(value), 2)}. Кандидаты на [0,5]: 0, 2, 5; абсолютный минимум −4 при x=2, максимум 5 при x=5.`;
+              break;
+            }
+            case "application-mvt": {
+              const b = value;
+              const c = b / 2;
+              const secantSlope = b;
+              config = { xMin: 0, xMax: Math.max(5, b + 0.2), yMin: 0, yMax: 27,
+                curves: [line((x) => x * x),
+                  line((x) => secantSlope * x, "#16a765", true),
+                  line((x) => c * c + 2 * c * (x - c), "#f97316")],
+                points: [point(0, 0), point(b, b * b), point(c, c * c)] };
+              message = `На [0,${format(b, 2)}]: секущий наклон = ${format(b, 2)}. f′(c)=2c=${format(b, 2)}, поэтому c=${format(c, 2)}.`;
+              break;
+            }
+            case "application-sign-chart": {
+              const f = (x) => x ** 3 - 3 * x;
+              const derivative = 3 * value * value - 3;
+              config = { xMin: -2, xMax: 2, yMin: -4, yMax: 4,
+                curves: [line(f)], verticals: [-1, 1],
+                points: [point(value, f(value))] };
+              message = `При x=${format(value, 2)}: f′(x)=3x²−3=${format(derivative)}; функция ${derivative > 0 ? "возрастает" : derivative < 0 ? "убывает" : "имеет критическую точку"}.`;
+              break;
+            }
+            case "application-concavity": {
+              const f = (x) => x ** 3;
+              const secondDerivative = 6 * value;
+              config = { xMin: -3, xMax: 3, yMin: -10, yMax: 10,
+                curves: [line(f)], verticals: [0],
+                points: [point(value, f(value))] };
+              message = `При x=${format(value, 2)}: f″(x)=6x=${format(secondDerivative)}; график ${secondDerivative > 0 ? "вогнут вверх" : secondDerivative < 0 ? "вогнут вниз" : "меняет вогнутость (перегиб при x=0)"}.`;
+              break;
+            }
+            case "application-lhopital": {
+              const quotient = (x) => x === 0 ? 1 : (Math.exp(x) - 1) / x;
+              config = { xMin: -2, xMax: 2, yMin: 0, yMax: 4,
+                curves: [line(quotient), line(Math.exp, "#f97316", true)],
+                points: [point(value, quotient(value)), point(value, Math.exp(value), "#f97316")] };
+              message = `При x=${format(value, 2)}: (eˣ−1)/x=${format(quotient(value))}, после Лопиталя eˣ=${format(Math.exp(value))}. При x→0 оба предела стремятся к 1.`;
+              break;
+            }
+            case "application-optimization": {
+              const area = value * (10 - value);
+              config = { xMin: 0, xMax: 10, yMin: 0, yMax: 27,
+                curves: [line((x) => x * (10 - x))],
+                verticals: [5], points: [point(value, area)] };
+              message = `Выбраны стороны ${format(value, 2)} и ${format(10 - value, 2)}; площадь=${format(area, 2)}. Максимум 25 достигается при x=5.`;
+              break;
+            }
+            case "application-newton": {
+              let current = 1.5;
+              const iterates = [current];
+              for (let i = 0; i < value; i += 1) {
+                current = (current + 2 / current) / 2;
+                iterates.push(current);
+              }
+              const previous = iterates[Math.max(0, iterates.length - 2)];
+              const next = current;
+              const tangentSlope = 2 * previous;
+              config = { xMin: 0, xMax: 2, yMin: -2, yMax: 2,
+                curves: [line((x) => x * x - 2),
+                  line((x) => (previous * previous - 2) + tangentSlope * (x - previous), "#16a765", true)],
+                verticals: [Math.sqrt(2)],
+                points: [point(previous, previous * previous - 2), point(next, 0, "#f97316")] };
+              message = `Шаг n=${format(value, 0)}: xₙ=${format(next, 7)}; ошибка относительно √2 ≈ ${Math.abs(next - Math.sqrt(2)).toExponential(2)}.`;
+              break;
+            }
+            case "application-antiderivative": {
+              const f = (x) => x * x;
+              const integral = value ** 3 / 3;
+              config = { xMin: 0, xMax: 4.5, yMin: 0, yMax: 20,
+                curves: [line(f)], area: { start: 0, end: value, fn: f },
+                verticals: [value], points: [point(value, f(value))] };
+              message = `Площадь под y=x² от 0 до ${format(value, 2)}: ∫₀ᵇx²dx=b³/3=${format(integral, 3)}.`;
+              break;
+            }
+            default:
+              throw new Error(`No study interactive behavior for "${type}".`);
+          }
+
+          draw(config);
+          result.textContent = message;
+          canvas.setAttribute("aria-label", `${title}. ${message}`);
+        };
+
+        input.addEventListener("input", update);
+        update();
+        return panel;
       }
 
       function createFormulaLab() {
@@ -542,13 +1133,13 @@
         lab.className = "formula-lab";
         lab.setAttribute("aria-labelledby", "formula-lab-title");
         lab.innerHTML = `
-          <h2 id="formula-lab-title">Interactive formula lab</h2>
-          <p>Change the inputs and watch how function values and graphs respond.</p>
+          <h2 id="formula-lab-title">Интерактивная математическая мастерская</h2>
+          <p>Меняй числа и наблюдай, как меняются результат и график.</p>
           <div class="lab-grid">
             <section class="lab-panel" aria-labelledby="function-machine-title">
-              <h3 id="function-machine-title">Function machine</h3>
+              <h3 id="function-machine-title">Функция как автомат</h3>
               <label class="lab-control">
-                <span>Choose f(x)</span>
+                <span>Выбери правило</span>
                 <select data-function>
                   <option value="square">x²</option>
                   <option value="line">2x + 1</option>
@@ -558,19 +1149,19 @@
                 <span aria-hidden="true"></span>
               </label>
               <label class="lab-control">
-                <span>Input x</span>
+                <span>Вход x</span>
                 <input data-input type="range" min="-4" max="4" step="0.1" value="2">
                 <output data-input-value for="input">2.0</output>
               </label>
               <p class="lab-equation" data-function-equation>f(x) = x²</p>
-              <canvas class="lab-canvas" data-function-graph width="560" height="260" role="img" aria-label="Graph of the selected function with the current input marked"></canvas>
+              <canvas class="lab-canvas" data-function-graph width="560" height="260" role="img" aria-label="График выбранной функции с отметкой входа"></canvas>
               <p class="lab-result" data-function-result aria-live="polite"></p>
             </section>
 
             <section class="lab-panel" aria-labelledby="transformation-title">
-              <h3 id="transformation-title">Function transformations</h3>
+              <h3 id="transformation-title">Двигаем и растягиваем график</h3>
               <label class="lab-control">
-                <span>Base f(x)</span>
+                <span>Исходная f(x)</span>
                 <select data-base-function>
                   <option value="square">x²</option>
                   <option value="line">2x + 1</option>
@@ -580,39 +1171,69 @@
                 <span aria-hidden="true"></span>
               </label>
               <label class="lab-control">
-                <span>Stretch a</span>
+                <span>Масштаб a</span>
                 <input data-stretch type="range" min="-2" max="2" step="0.1" value="1">
                 <output data-stretch-value>1.0</output>
               </label>
               <label class="lab-control">
-                <span>Shift h</span>
+                <span>Сдвиг вправо h</span>
                 <input data-horizontal type="range" min="-3" max="3" step="0.1" value="0">
                 <output data-horizontal-value>0.0</output>
               </label>
               <label class="lab-control">
-                <span>Shift k</span>
+                <span>Сдвиг вверх k</span>
                 <input data-vertical type="range" min="-3" max="3" step="0.1" value="0">
                 <output data-vertical-value>0.0</output>
               </label>
               <label class="lab-control">
-                <span>Check x</span>
+                <span>Проверить x</span>
                 <input data-transform-input type="range" min="-4" max="4" step="0.1" value="2">
                 <output data-transform-input-value>2.0</output>
               </label>
               <p class="lab-equation" data-transform-equation></p>
-              <canvas class="lab-canvas" data-transform-graph width="560" height="260" role="img" aria-label="Original and transformed function graphs"></canvas>
+              <canvas class="lab-canvas" data-transform-graph width="560" height="260" role="img" aria-label="Исходный и преобразованный графики функции"></canvas>
               <p class="lab-result" data-transform-result aria-live="polite"></p>
             </section>
 
             <section class="lab-panel" aria-labelledby="composition-title">
-              <h3 id="composition-title">Composition: f(g(x))</h3>
-              <p class="lab-equation">g(x) = x + 1 &nbsp; then &nbsp; f(u) = u²</p>
+              <h3 id="composition-title">Две функции по очереди: f(g(x))</h3>
+              <p class="lab-equation">g(x) = x + 1, затем f(u) = u²</p>
               <label class="lab-control">
-                <span>Input x</span>
+                <span>Вход x</span>
                 <input data-composition-input type="range" min="-4" max="4" step="0.1" value="1">
                 <output data-composition-input-value>1.0</output>
               </label>
               <p class="lab-result" data-composition-result aria-live="polite"></p>
+            </section>
+
+            <section class="lab-panel" aria-labelledby="trig-title">
+              <h3 id="trig-title">Синус и косинус на окружности</h3>
+              <label class="lab-control">
+                <span>Угол θ</span>
+                <input data-angle type="range" min="0" max="360" step="1" value="45">
+                <output data-angle-value>45°</output>
+              </label>
+              <canvas class="lab-canvas lab-canvas--circle" data-unit-circle width="280" height="280" role="img" aria-label="Единичная окружность с выбранным углом"></canvas>
+              <p class="lab-equation" data-trig-equation></p>
+              <canvas class="lab-canvas" data-trig-graph width="560" height="220" role="img" aria-label="Графики синуса и косинуса с выбранным углом"></canvas>
+              <p class="lab-result" data-trig-result aria-live="polite"></p>
+            </section>
+
+            <section class="lab-panel" aria-labelledby="exponential-title">
+              <h3 id="exponential-title">Экспонента и логарифм — обратные функции</h3>
+              <label class="lab-control">
+                <span>Основание a</span>
+                <input data-log-base type="range" min="1.2" max="3" step="0.1" value="2">
+                <output data-log-base-value>2.0</output>
+              </label>
+              <label class="lab-control">
+                <span>Вход x</span>
+                <input data-log-input type="range" min="0.2" max="5" step="0.1" value="3">
+                <output data-log-input-value>3.0</output>
+              </label>
+              <p class="lab-equation" data-log-equation></p>
+              <canvas class="lab-canvas" data-log-graph width="560" height="260" role="img" aria-label="Графики экспоненты и логарифма отражены относительно y равно x"></canvas>
+              <p class="lab-result" data-log-result aria-live="polite"></p>
             </section>
           </div>
         `;
@@ -627,35 +1248,61 @@
           const rounded = Math.abs(value) < 0.005 ? 0 : value;
           return rounded.toFixed(2);
         };
-        const drawGraph = (canvas, functions, markerX) => {
+        const drawGraph = (
+          canvas,
+          functions,
+          markerX,
+          markerFunctionIndex = functions.length - 1,
+          xMin = -5,
+          xMax = 5,
+          yMin = -5,
+          yMax = 5,
+        ) => {
           const context = canvas.getContext("2d");
           const width = canvas.width;
           const height = canvas.height;
-          const xMin = -5;
-          const xMax = 5;
-          const yMin = -5;
-          const yMax = 5;
-          const mapX = (x) => (x - xMin) * width / (xMax - xMin);
-          const mapY = (y) => height - (y - yMin) * height / (yMax - yMin);
+          const scale = Math.min(
+            width / (xMax - xMin),
+            height / (yMax - yMin),
+          );
+          const plotWidth = (xMax - xMin) * scale;
+          const plotHeight = (yMax - yMin) * scale;
+          const plotLeft = (width - plotWidth) / 2;
+          const plotTop = (height - plotHeight) / 2;
+          const plotBottom = plotTop + plotHeight;
+          const mapX = (x) => plotLeft + (x - xMin) * scale;
+          const mapY = (y) => plotBottom - (y - yMin) * scale;
 
           context.clearRect(0, 0, width, height);
           context.font = "12px Arial";
           context.lineWidth = 1;
           context.strokeStyle = "#e8edf3";
-          for (let value = -4; value <= 4; value += 1) {
+          context.save();
+          context.beginPath();
+          context.rect(plotLeft, plotTop, plotWidth, plotHeight);
+          context.clip();
+          for (let value = Math.ceil(xMin); value <= Math.floor(xMax); value += 1) {
             context.beginPath();
-            context.moveTo(mapX(value), 0);
-            context.lineTo(mapX(value), height);
-            context.moveTo(0, mapY(value));
-            context.lineTo(width, mapY(value));
+            context.moveTo(mapX(value), plotTop);
+            context.lineTo(mapX(value), plotBottom);
+            context.stroke();
+          }
+          for (let value = Math.ceil(yMin); value <= Math.floor(yMax); value += 1) {
+            context.beginPath();
+            context.moveTo(plotLeft, mapY(value));
+            context.lineTo(plotLeft + plotWidth, mapY(value));
             context.stroke();
           }
           context.strokeStyle = "#758195";
           context.beginPath();
-          context.moveTo(mapX(0), 0);
-          context.lineTo(mapX(0), height);
-          context.moveTo(0, mapY(0));
-          context.lineTo(width, mapY(0));
+          if (xMin <= 0 && xMax >= 0) {
+            context.moveTo(mapX(0), plotTop);
+            context.lineTo(mapX(0), plotBottom);
+          }
+          if (yMin <= 0 && yMax >= 0) {
+            context.moveTo(plotLeft, mapY(0));
+            context.lineTo(plotLeft + plotWidth, mapY(0));
+          }
           context.stroke();
 
           for (const graph of functions) {
@@ -664,31 +1311,32 @@
             context.lineWidth = 2.5;
             context.setLineDash(graph.dashed ? [7, 5] : []);
             let started = false;
-            for (let pixel = 0; pixel <= width; pixel += 1) {
-              const x = xMin + pixel * (xMax - xMin) / width;
+            for (let pixel = 0; pixel <= plotWidth; pixel += 1) {
+              const x = xMin + pixel / scale;
               const y = graph.fn(x);
               if (!Number.isFinite(y) || y < yMin - 1 || y > yMax + 1) {
                 started = false;
                 continue;
               }
               if (!started) {
-                context.moveTo(pixel, mapY(y));
+                context.moveTo(plotLeft + pixel, mapY(y));
                 started = true;
               } else {
-                context.lineTo(pixel, mapY(y));
+                context.lineTo(plotLeft + pixel, mapY(y));
               }
             }
             context.stroke();
           }
           context.setLineDash([]);
 
-          const markerY = functions[functions.length - 1].fn(markerX);
+          const markerY = functions[markerFunctionIndex].fn(markerX);
           if (Number.isFinite(markerY) && markerY >= yMin && markerY <= yMax) {
             context.beginPath();
             context.fillStyle = "#ff6b35";
             context.arc(mapX(markerX), mapY(markerY), 5, 0, Math.PI * 2);
             context.fill();
           }
+          context.restore();
         };
 
         const functionSelect = lab.querySelector("[data-function]");
@@ -707,7 +1355,7 @@
           const value = evaluate(functionSelect.value, x);
           functionInputValue.value = x.toFixed(1);
           functionEquation.textContent = `f(x) = ${functionLabels[functionSelect.value]}`;
-          functionResult.textContent = `f(${x.toFixed(1)}) = ${format(value)}`;
+          functionResult.textContent = `Правило выдаёт: f(${x.toFixed(1)}) = ${format(value)}. Точка на графике: (${x.toFixed(1)}, ${format(value)}).`;
           drawGraph(lab.querySelector("[data-function-graph]"), [
             { fn: (sample) => evaluate(functionSelect.value, sample), color: "#3366cc" },
           ], x);
@@ -742,7 +1390,7 @@
           lab.querySelector("[data-vertical-value]").value = k.toFixed(1);
           lab.querySelector("[data-transform-input-value]").value = x.toFixed(1);
           transformEquation.textContent = `y = ${a.toFixed(1)} · f(x ${horizontalTerm}) ${verticalTerm}`;
-          transformResult.textContent = `At x = ${x.toFixed(1)}: original f(x) = ${format(base(x))}; transformed y = ${format(transformed(x))}.`;
+          transformResult.textContent = `При x = ${x.toFixed(1)} исходное значение f(x) = ${format(base(x))}, после преобразования y = ${format(transformed(x))}.`;
           drawGraph(lab.querySelector("[data-transform-graph]"), [
             { fn: base, color: "#8b98a8", dashed: true },
             { fn: transformed, color: "#16a765" },
@@ -761,10 +1409,97 @@
           const intermediate = x + 1;
           const composed = intermediate * intermediate;
           compositionInput.nextElementSibling.value = x.toFixed(1);
-          compositionResult.textContent = `Step 1: g(${x.toFixed(1)}) = ${intermediate.toFixed(2)}. Step 2: f(${intermediate.toFixed(2)}) = ${composed.toFixed(2)}. So (f ∘ g)(${x.toFixed(1)}) = ${composed.toFixed(2)}.`;
+          compositionResult.textContent = `Шаг 1: g(${x.toFixed(1)}) = ${intermediate.toFixed(2)}. Шаг 2: f(${intermediate.toFixed(2)}) = ${composed.toFixed(2)}. Значит, (f ∘ g)(${x.toFixed(1)}) = ${composed.toFixed(2)}.`;
         };
         compositionInput.addEventListener("input", updateComposition);
         updateComposition();
+
+        const angleInput = lab.querySelector("[data-angle]");
+        const unitCircle = lab.querySelector("[data-unit-circle]");
+        const trigGraph = lab.querySelector("[data-trig-graph]");
+        const trigEquation = lab.querySelector("[data-trig-equation]");
+        const trigResult = lab.querySelector("[data-trig-result]");
+        const drawUnitCircle = (angle) => {
+          const context = unitCircle.getContext("2d");
+          const centerX = unitCircle.width / 2;
+          const centerY = unitCircle.height / 2;
+          const radius = 94;
+          const radians = angle * Math.PI / 180;
+          const pointX = centerX + radius * Math.cos(radians);
+          const pointY = centerY - radius * Math.sin(radians);
+
+          context.clearRect(0, 0, unitCircle.width, unitCircle.height);
+          context.strokeStyle = "#e8edf3";
+          context.lineWidth = 1;
+          for (const offset of [-radius, 0, radius]) {
+            context.beginPath();
+            context.moveTo(centerX + offset, 22);
+            context.lineTo(centerX + offset, unitCircle.height - 22);
+            context.moveTo(22, centerY + offset);
+            context.lineTo(unitCircle.width - 22, centerY + offset);
+            context.stroke();
+          }
+          context.beginPath();
+          context.strokeStyle = "#3366cc";
+          context.lineWidth = 2;
+          context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+          context.stroke();
+          context.beginPath();
+          context.strokeStyle = "#ff6b35";
+          context.lineWidth = 2;
+          context.moveTo(centerX, centerY);
+          context.lineTo(pointX, pointY);
+          context.stroke();
+          context.beginPath();
+          context.fillStyle = "#16a765";
+          context.arc(pointX, pointY, 6, 0, 2 * Math.PI);
+          context.fill();
+          context.fillStyle = "#202122";
+          context.font = "14px Arial";
+          context.fillText("(cos θ, sin θ)", 12, 20);
+          context.fillText(`(${format(Math.cos(radians))}, ${format(Math.sin(radians))})`, 12, unitCircle.height - 10);
+        };
+        const updateTrig = () => {
+          const degrees = Number(angleInput.value);
+          const radians = degrees * Math.PI / 180;
+          const sine = Math.sin(radians);
+          const cosine = Math.cos(radians);
+          lab.querySelector("[data-angle-value]").value = `${degrees}°`;
+          trigEquation.textContent = `${degrees}° = ${format(radians)} рад`;
+          trigResult.textContent = `На единичной окружности cos(${degrees}°) — горизонтальная координата (${format(cosine)}), а sin(${degrees}°) — вертикальная (${format(sine)}).`;
+          drawUnitCircle(degrees);
+          drawGraph(trigGraph, [
+            { fn: (x) => Math.sin(x), color: "#3366cc" },
+            { fn: (x) => Math.cos(x), color: "#16a765", dashed: true },
+          ], radians, 0, 0, 2 * Math.PI, -1.5, 1.5);
+        };
+        angleInput.addEventListener("input", updateTrig);
+        updateTrig();
+
+        const logBaseInput = lab.querySelector("[data-log-base]");
+        const logInput = lab.querySelector("[data-log-input]");
+        const logEquation = lab.querySelector("[data-log-equation]");
+        const logResult = lab.querySelector("[data-log-result]");
+        const updateLog = () => {
+          const base = Number(logBaseInput.value);
+          const x = Number(logInput.value);
+          const exponentialValue = base ** x;
+          const logarithmValue = Math.log(x) / Math.log(base);
+          lab.querySelector("[data-log-base-value]").value = base.toFixed(1);
+          lab.querySelector("[data-log-input-value]").value = x.toFixed(1);
+          logEquation.textContent = `aˣ = ${format(exponentialValue)}  ⇄  logₐ(${x.toFixed(1)}) = ${format(logarithmValue)}`;
+          logResult.textContent = `Пары (${x.toFixed(1)}, ${format(exponentialValue)}) и (${format(exponentialValue)}, ${x.toFixed(1)}) меняются координатами. Поэтому графики экспоненты и логарифма зеркальны относительно y = x.`;
+          drawGraph(lab.querySelector("[data-log-graph]"), [
+            { fn: (sample) => base ** sample, color: "#3366cc" },
+            { fn: (sample) => sample > 0 ? Math.log(sample) / Math.log(base) : Number.NaN, color: "#16a765" },
+            { fn: (sample) => sample, color: "#8b98a8", dashed: true },
+          ], x, 1);
+        };
+        for (const control of [logBaseInput, logInput]) {
+          control.addEventListener("input", updateLog);
+          control.addEventListener("change", updateLog);
+        }
+        updateLog();
 
         return lab;
       }

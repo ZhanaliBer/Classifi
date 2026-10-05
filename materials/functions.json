@@ -1,56 +1,152 @@
 {
   "id": "functions",
   "title": "Functions",
-  "overview": "This guide covers the fundamental concepts of functions, including their representations, classifications, transformations, and the relationship between a function and its inverse.",
+  "overview": "Экзаменационная шпаргалка: распознай тип задачи, выполни шаги по порядку и проверь ограничения. В каждом разделе — алгоритмы, образцы и частые ошибки.",
   "interactive": "functions",
   "sections": [
     {
-      "heading": "Fundamentals of Functions",
+      "heading": "1.1 Functions and Their Graphs — значения, domain и range",
       "paragraphs": [
-        "A function is a mathematical rule that assigns a single output value to every input value from a specific set. The set of all valid inputs is known as the domain, while the set of resulting outputs is the range. Functions can be expressed through algebraic formulas, graphs, numerical tables, or verbal descriptions.",
-        "To determine if a curve in a coordinate plane is a function, the Vertical Line Test is used: if any vertical line intersects the curve more than once, the curve is not a function."
+        "Вычислить значение: f(x) = 2x² − 3x, найти f(−2). Подстановка даёт 2(−2)² − 3(−2) = 8 + 6 = 14.",
+        "Для domain используй ограничения исходной формулы. Для range выбери метод по виду функции: вершина/экстремум, преобразование базового графика или уравнение y = f(x)."
+      ],
+      "steps": [
+        "Значение f(a): замени каждый x на (a); отрицательное a обязательно заключи в скобки; упрости по порядку действий.",
+        "Domain: начни с ℝ; для каждой дроби запиши знаменатель ≠ 0; для чётного корня — подкоренное выражение ≥ 0; для log(u) — u > 0.",
+        "Реши каждое ограничение отдельно и пересеки полученные множества. Запиши итог интервалами; проверь, включаются ли граничные точки.",
+        "Range по параболе: приведи к виду a(x − h)² + k; используй (x − h)² ≥ 0, направление ветвей и достигается ли вершина.",
+        "Range для дробно-линейной функции: положи y = f(x), вырази x; исключи y, для которого знаменатель при выражении x обращается в ноль.",
+        "Range по графику: спроецируй график на ось y. Закрашенные концы включай, пустые точки и недостижимые асимптоты исключай."
+      ],
+      "formulas": [
+        "f(−2) для f(x) = 2x² − 3x: 2(−2)² − 3(−2) = 14",
+        "√(5 − 2x): 5 − 2x ≥ 0 ⇒ x ≤ 5/2 ⇒ domain = (−∞, 5/2]",
+        "ln(x + 3)/(x − 1): x + 3 > 0; x − 1 ≠ 0 ⇒ domain = (−3, 1) ∪ (1, ∞)",
+        "y = (x − 1)² + 2: вершина y = 2, ветви вверх ⇒ range = [2, ∞)",
+        "y = 1/(x − 2) + 3: решить y − 3 = 1/(x − 2); y ≠ 3 ⇒ range = (−∞, 3) ∪ (3, ∞)",
+        "y = √(5 − 2x): y ≥ 0; x = (5 − y²)/2 допустим для каждого y ≥ 0 ⇒ range = [0, ∞)"
       ],
       "key_points": [
-        "Domain: The set of all possible input values.",
-        "Range: The set of all possible output values.",
-        "Vertical Line Test: A curve is a function if no vertical line crosses it more than once."
+        "Domain: ограничения исходной формулы, включая исходные знаменатели даже после сокращения.",
+        "Несколько ограничений означают пересечение, а не объединение.",
+        "Range: обоснуй и достижимость границы, и невозможность значений за ней."
       ]
     },
     {
-      "heading": "Classifying Functions",
+      "heading": "1.2 Combining Functions; Shifting and Scaling Graphs — операции и преобразования",
       "paragraphs": [
-        "Functions are categorized based on their behavior and symmetry. An increasing function rises from left to right, while a decreasing function falls. Symmetry is defined by parity: even functions are symmetric about the y-axis, and odd functions are symmetric about the origin.",
-        "Common function types include linear, power, polynomial, rational, trigonometric, exponential, and logarithmic functions. Functions that cannot be constructed using basic algebraic operations are termed transcendental functions."
+        "Пример композиции: f(u) = u², g(x) = x + 1. Тогда f(g(x)) = (x + 1)²; при x = 2 результат равен 9. Сначала выполняется внутренняя функция."
+      ],
+      "steps": [
+        "Для f ± g, fg или f/g подставь определения функций и упрости выражение.",
+        "Для f/g исключи все x, где g(x) = 0; ограничения обеих функций также сохраняются.",
+        "Для f(g(x)) сначала запиши g(x), затем подставь всё выражение вместо аргумента f.",
+        "Для domain композиции потребуй одновременно x ∈ domain(g) и g(x) ∈ domain(f).",
+        "Для y = a f(x − h) + k сначала найди базовый график, затем примени сдвиги и масштаб: вправо h, вертикально ×a, вверх k."
+      ],
+      "formulas": [
+        "(f ± g)(x) = f(x) ± g(x); (fg)(x) = f(x)g(x)",
+        "(f/g)(x) = f(x)/g(x), дополнительно g(x) ≠ 0",
+        "(f ∘ g)(x) = f(g(x)); если f(u)=u², g(x)=x+1, то f(g(x))=(x+1)²",
+        "y = a f(x − h) + k: горизонтальный сдвиг h, вертикальный масштаб a, сдвиг k"
       ],
       "key_points": [
-        "Even Function: Satisfies f(-x) = f(x).",
-        "Odd Function: Satisfies f(-x) = -f(x).",
-        "Transcendental Functions: Non-algebraic functions (e.g., trigonometric or exponential)."
+        "Композиция читается изнутри наружу: сначала g, потом f.",
+        "Знак сдвига внутри скобок противоположен: f(x + 3) — сдвиг влево на 3.",
+        "Сохраняй ограничения исходных функций при упрощении."
       ]
     },
     {
-      "heading": "Combining and Transforming Functions",
+      "heading": "1.3 Trigonometric Functions — тригонометрия",
       "paragraphs": [
-        "New functions can be created by performing arithmetic operations (addition, subtraction, multiplication, and division) on existing functions. Composition is another method where the output of one function becomes the input of another, denoted as (f ∘ g)(x) = f(g(x)).",
-        "Graphs can be modified through shifting (moving the graph vertically or horizontally), scaling (stretching or compressing the graph), and reflecting (flipping the graph across an axis)."
+        "Для y = 3 sin(2x − π) + 1: амплитуда 3, период π, средняя линия y = 1. Здесь B = 2, поэтому период 2π/2."
+      ],
+      "steps": [
+        "Проверь единицы угла: для Calculus обычно нужны радианы; градусы переведи умножением на π/180.",
+        "Сведи угол к опорному углу и определи квадрант; знак sin/cos/tan возьми по квадранту.",
+        "Для tan θ вычисли sin θ/cos θ и проверь, что cos θ ≠ 0.",
+        "Для A sin(Bx + C) + D или A cos(Bx + C) + D выпиши A, B, C, D отдельно.",
+        "Найди амплитуду |A|, период 2π/|B| и среднюю линию y = D; затем найди сдвиг по фазе −C/B."
+      ],
+      "formulas": [
+        "(cos θ, sin θ) — координаты точки на единичной окружности",
+        "Радианы = градусы · π/180; 180° = π",
+        "tan θ = sin θ/cos θ; исключить θ = π/2 + kπ",
+        "A sin(Bx + C) + D: амплитуда |A|; период 2π/|B|; midline y = D; phase shift = −C/B"
       ],
       "key_points": [
-        "Composition: Applying one function to the result of another.",
-        "Vertical Shift: Adding a constant to the output (f(x) + k).",
-        "Horizontal Shift: Adding a constant to the input (f(x + h)).",
-        "Reflection: Multiplying by -1 to flip across the x-axis (-f(x)) or y-axis (f(-x))."
+        "Сначала установи радианный режим калькулятора.",
+        "Для tan отдельно проверь точки, где cos θ = 0.",
+        "Период зависит от коэффициента B, а не от сдвигов C и D."
       ]
     },
     {
-      "heading": "Inverse Functions",
+      "heading": "1.4 Graphing with Software — анализ графика",
       "paragraphs": [
-        "An inverse function 'undoes' the action of the original function. Only one-to-one functions—those where every output corresponds to exactly one input—possess an inverse. This property is verified using the Horizontal Line Test.",
-        "The graph of an inverse function is a reflection of the original function across the line y = x, effectively swapping the domain and range of the original function."
+        "График используй, чтобы оценить ответ, а не заменить точное обоснование. Например, пересечение с осью x даёт кандидата на корень; затем подставь значение в f(x) или реши f(x) = 0."
+      ],
+      "steps": [
+        "Перед чтением настрой окно так, чтобы были видны важные участки и концы графика.",
+        "Domain считай проекцией графика на ось x; range — проекцией на ось y.",
+        "Отметь пустые/закрашенные точки, разрывы и асимптоты.",
+        "Проверь предполагаемые корни подстановкой; пересечение графиков проверь решением f(x) = g(x).",
+        "Укажи, где результат точный, а где программа дала только приближение."
+      ],
+      "formulas": [
+        "Корни: f(x) = 0",
+        "Точки пересечения y=f(x) и y=g(x): решить f(x)=g(x)",
+        "Проекция графика на x-axis = domain; на y-axis = range"
       ],
       "key_points": [
-        "One-to-One: A function where distinct inputs always produce distinct outputs.",
-        "Horizontal Line Test: A function is one-to-one if no horizontal line intersects its graph more than once.",
-        "Inverse Property: (f⁻¹ ∘ f)(x) = x and (f ∘ f⁻¹)(y) = y."
+        "Численная оценка с графика не заменяет точный ответ.",
+        "Проверяй разрывы, концы интервалов и масштаб."
+      ]
+    },
+    {
+      "heading": "1.5 Exponential Functions — показательные уравнения",
+      "paragraphs": [
+        "Пример: 2^(x + 1) = 8. Перепиши 8 как 2³; основания совпали, значит x + 1 = 3 и x = 2."
+      ],
+      "steps": [
+        "Попробуй привести обе части к одному основанию.",
+        "Если основания одинаковые и допустимые, приравняй показатели и реши полученное уравнение.",
+        "Если основания не привести, возьми логарифм обеих частей и используй log(aˣ) = x log(a).",
+        "Подставь найденное значение в исходное уравнение и проверь область определения."
+      ],
+      "formulas": [
+        "aᵘ = aᵛ ⇒ u = v, если a > 0 и a ≠ 1",
+        "2^(x+1) = 8 = 2³ ⇒ x + 1 = 3 ⇒ x = 2",
+        "aˣ > 0; domain = ℝ; range = (0, ∞); горизонтальная асимптота y = 0"
+      ],
+      "key_points": [
+        "При равных основаниях приравнивай показатели.",
+        "Показательная функция принимает только положительные значения.",
+        "Логарифмирование обеих частей требует допустимых положительных аргументов."
+      ]
+    },
+    {
+      "heading": "1.6 Inverse Functions and Logarithms — обратные функции и логарифмы",
+      "paragraphs": [
+        "Пример inverse: y = 3x − 5. Поменяй x и y: x = 3y − 5; реши: y = (x + 5)/3. Значит, f⁻¹(x) = (x + 5)/3.",
+        "Пример логарифмического уравнения: log₂(x − 1) = 3. Перепиши как x − 1 = 2³; получи x = 9; проверь аргумент: 9 − 1 > 0."
+      ],
+      "steps": [
+        "Inverse: запиши y = f(x); поменяй местами x и y; реши относительно y; замени y на f⁻¹(x).",
+        "Если исходная функция не проходит horizontal line test, сначала ограничь её domain до участка без повторяющихся y.",
+        "Логарифмическое уравнение: выпиши условие положительности каждого аргумента до преобразований.",
+        "Перепиши logₐ(u) = c как u = aᶜ; несколько логарифмов сначала объедини по правилам логарифмов.",
+        "Реши полученное уравнение и подставь кандидаты в исходные ограничения; недопустимые корни исключи."
+      ],
+      "formulas": [
+        "logₐ b = c ⇔ aᶜ = b; a > 0, a ≠ 1, b > 0",
+        "logₐu + logₐv = logₐ(uv); logₐu − logₐv = logₐ(u/v)",
+        "logₐ(u) = logₐ(v) ⇒ u = v, если u > 0 и v > 0",
+        "Domain(f⁻¹) = range(f); range(f⁻¹) = domain(f)"
+      ],
+      "key_points": [
+        "Всегда проверь положительность аргументов логарифмов в исходном уравнении.",
+        "Domain и range при обращении функции меняются местами.",
+        "Логарифм суммы не раскладывается: log(u + v) ≠ log u + log v."
       ]
     }
   ]
