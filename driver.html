@@ -375,6 +375,125 @@
       padding-left: 22px;
     }
 
+    .tutor-chat {
+      margin-top: 28px;
+      padding: clamp(18px, 4vw, 30px);
+      border: 1px solid #c8d8ed;
+      border-top: 4px solid #36c;
+      border-radius: 6px;
+      background: #f8fbff;
+    }
+
+    .tutor-chat-heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tutor-chat-heading h2 { margin: 0; }
+    .tutor-chat-badge {
+      padding: 3px 8px;
+      border-radius: 3px;
+      color: #174ea6;
+      background: #e5efff;
+      font: 700 11px/1.5 Arial, sans-serif;
+      letter-spacing: .06em;
+    }
+
+    .tutor-chat-intro { margin: 8px 0 14px; color: var(--muted); }
+    .tutor-chat-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .tutor-example {
+      padding: 7px 11px;
+      border: 1px solid #aebfd6;
+      border-radius: 4px;
+      color: #174ea6;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .tutor-example:hover { border-color: #36c; background: var(--highlight); }
+    .tutor-messages {
+      display: grid;
+      gap: 14px;
+      max-height: 560px;
+      overflow-y: auto;
+      margin: 18px 0;
+      padding: 2px;
+    }
+
+    .tutor-message {
+      min-width: 0;
+      padding: 14px 16px;
+      border: 1px solid #d9e2ee;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .tutor-message--user {
+      margin-left: clamp(12px, 8vw, 72px);
+      border-color: #c5d9fa;
+      background: #f0f6ff;
+    }
+
+    .tutor-message--error {
+      border-color: #e7b5b5;
+      background: #fff7f7;
+    }
+
+    .tutor-message-label {
+      margin: 0 0 5px;
+      color: var(--muted);
+      font: 700 12px/1.4 Arial, sans-serif;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .tutor-message p { margin: 6px 0; }
+    .tutor-message-steps { margin: 10px 0; padding-left: 24px; }
+    .tutor-message-steps li { padding-left: 4px; margin: 10px 0; }
+    .tutor-step-equation {
+      overflow-x: auto;
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 5px;
+      background: #f5f8fc;
+    }
+
+    .tutor-chat-form { display: grid; gap: 10px; }
+    .tutor-chat-input {
+      width: 100%;
+      min-height: 96px;
+      resize: vertical;
+      padding: 12px;
+      border: 1px solid #a2a9b1;
+      border-radius: 6px;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+    }
+
+    .tutor-chat-submit {
+      justify-self: end;
+      min-width: 136px;
+      padding: 10px 18px;
+      border: 1px solid #2457a7;
+      border-radius: 5px;
+      color: #fff;
+      background: #36c;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tutor-chat-submit:disabled { cursor: wait; opacity: .65; }
+    .tutor-chat-status { min-height: 22px; margin: 0; color: var(--muted); }
+
     .formula-lab {
       margin-top: 30px;
       padding: 22px;
@@ -484,7 +603,7 @@
     </a>
     <button class="pinger" id="api-pinger" type="button" data-state="idle" aria-describedby="pinger-status">
       <span class="pinger-light" aria-hidden="true"></span>
-      <span id="pinger-label">PINGER</span>
+      <span id="pinger-label">Проверить API</span>
     </button>
     <span class="pinger-status" id="pinger-status" role="status" aria-live="polite">API status unknown.</span>
   </header>
@@ -513,6 +632,29 @@
           Study topics are organized in the tabs above.
         </div>
         <p>Choose a topic from the tabs above. Empty topics are ready for new study material.</p>
+        <section class="tutor-chat" aria-labelledby="tutor-chat-title">
+          <div class="tutor-chat-heading">
+            <h2 id="tutor-chat-title">Помощник по математике</h2>
+            <span class="tutor-chat-badge">AI</span>
+          </div>
+          <p class="tutor-chat-intro">Задайте вопрос по формуле или отправьте пример. Помощник определит задачу и при необходимости разберёт решение по шагам.</p>
+          <div class="tutor-chat-examples" aria-label="Примеры запросов">
+            <button class="tutor-example" type="button" data-prompt="Пожалуйста, объясните правило произведения производных и приведите пример.">Объяснить формулу</button>
+            <button class="tutor-example" type="button" data-prompt="Пожалуйста, решите пошагово: найти производную y = x² sin(x).">Решить пример</button>
+          </div>
+          <div class="tutor-messages" id="tutor-messages" role="log" aria-live="polite" aria-relevant="additions text">
+            <article class="tutor-message">
+              <p class="tutor-message-label">Репетитор</p>
+              <p>Выберите пример выше или задайте свой вопрос — ответ будет оформлен по шагам.</p>
+            </article>
+          </div>
+          <form class="tutor-chat-form" id="tutor-chat-form">
+            <label for="tutor-chat-input">Ваш вопрос или пример</label>
+            <textarea class="tutor-chat-input" id="tutor-chat-input" name="message" maxlength="3000" placeholder="Например: найдите ∫ x·eˣ dx пошагово" required></textarea>
+            <button class="tutor-chat-submit" id="tutor-chat-submit" type="submit">Отправить</button>
+            <p class="tutor-chat-status" id="tutor-chat-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
       </article>
 
       <footer class="page-footer">A compact calculus reference · Topic articles are maintained individually.</footer>
@@ -538,7 +680,7 @@
       pinger.addEventListener("click", async () => {
         pinger.disabled = true;
         pinger.dataset.state = "loading";
-        pingerLabel.textContent = "PINGING...";
+        pingerLabel.textContent = "Проверка…";
         pingerStatus.textContent = "Checking connection to the LLM API.";
 
         try {
@@ -548,11 +690,11 @@
             throw new Error(result.message || "The API check failed.");
           }
           pinger.dataset.state = "success";
-          pingerLabel.textContent = "ONLINE";
+          pingerLabel.textContent = "API онлайн";
           pingerStatus.textContent = result.message;
         } catch (error) {
           pinger.dataset.state = "error";
-          pingerLabel.textContent = "OFFLINE";
+          pingerLabel.textContent = "API недоступен";
           pingerStatus.textContent = error instanceof Error
             ? error.message
             : "Could not check the API connection.";
@@ -645,6 +787,145 @@
           });
         }
         return mathRendererPromise;
+      }
+
+      const tutorChatForm = document.getElementById("tutor-chat-form");
+      const tutorChatInput = document.getElementById("tutor-chat-input");
+      const tutorChatMessages = document.getElementById("tutor-messages");
+      const tutorChatSubmit = document.getElementById("tutor-chat-submit");
+      const tutorChatStatus = document.getElementById("tutor-chat-status");
+      const tutorChatHistory = [];
+
+      function addTutorUserMessage(text) {
+        const message = document.createElement("article");
+        message.className = "tutor-message tutor-message--user";
+        const label = document.createElement("p");
+        label.className = "tutor-message-label";
+        label.textContent = "Запрос";
+        const content = document.createElement("p");
+        content.textContent = text;
+        message.append(label, content);
+        tutorChatMessages.append(message);
+        message.scrollIntoView({ block: "nearest" });
+      }
+
+      async function addTutorAnswer(answer) {
+        const message = document.createElement("article");
+        message.className = "tutor-message";
+        const label = document.createElement("p");
+        label.className = "tutor-message-label";
+        label.textContent = answer.intent === "formula"
+          ? "Репетитор · формула"
+          : "Репетитор · решение";
+        const summary = document.createElement("p");
+        summary.textContent = answer.summary;
+        message.append(label, summary);
+
+        if (answer.steps.length) {
+          const steps = document.createElement("ol");
+          steps.className = "tutor-message-steps";
+          for (const step of answer.steps) {
+            const item = document.createElement("li");
+            const explanation = document.createElement("p");
+            explanation.textContent = step.explanation;
+            item.append(explanation);
+            if (step.formula) {
+              const equation = document.createElement("div");
+              equation.className = "tutor-step-equation";
+              equation.textContent = `\\[${step.formula}\\]`;
+              item.append(equation);
+            }
+            steps.append(item);
+          }
+          message.append(steps);
+        }
+
+        if (answer.answer) {
+          const finalAnswer = document.createElement("p");
+          finalAnswer.className = "tutor-final-answer";
+          finalAnswer.textContent = answer.answer;
+          message.append(finalAnswer);
+        }
+        tutorChatMessages.append(message);
+        try {
+          await loadMathRenderer();
+          await window.MathJax.typesetPromise([message]);
+        } catch (error) {
+          document.getElementById("math-renderer-status").hidden = false;
+          console.error("The tutor answer could not be typeset:", error);
+        }
+        message.scrollIntoView({ block: "nearest" });
+      }
+
+      function addTutorError(text) {
+        const message = document.createElement("article");
+        message.className = "tutor-message tutor-message--error";
+        message.textContent = text;
+        tutorChatMessages.append(message);
+        message.scrollIntoView({ block: "nearest" });
+      }
+
+      tutorChatForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const message = tutorChatInput.value.trim();
+        if (!message || tutorChatSubmit.disabled) return;
+
+        addTutorUserMessage(message);
+        tutorChatHistory.push({ role: "user", content: message });
+        tutorChatInput.value = "";
+        tutorChatSubmit.disabled = true;
+        tutorChatSubmit.textContent = "Думаю…";
+        tutorChatStatus.textContent = "Анализирую запрос и готовлю ответ.";
+
+        try {
+          const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              message,
+              history: tutorChatHistory.slice(0, -1).slice(-8),
+            }),
+          });
+          let result;
+          try {
+            result = await response.json();
+          } catch (error) {
+            throw new Error("Сервер вернул некорректный ответ. Попробуй ещё раз.");
+          }
+          if (!response.ok || !result.ok || !result.answer) {
+            throw new Error(result.message || "Не удалось получить ответ от ИИ.");
+          }
+
+          await addTutorAnswer(result.answer);
+          const answerContext = [
+            result.answer.summary,
+            ...result.answer.steps.flatMap((step) => [
+              step.explanation,
+              step.formula ? `\\(${step.formula}\\)` : "",
+            ]),
+            result.answer.answer,
+          ].filter(Boolean).join("\n").slice(0, 1_200);
+          tutorChatHistory.push({ role: "assistant", content: answerContext });
+          tutorChatStatus.textContent = "Ответ готов.";
+        } catch (error) {
+          tutorChatHistory.pop();
+          const messageText = error instanceof Error
+            ? error.message
+            : "Не удалось выполнить запрос.";
+          addTutorError(messageText);
+          tutorChatStatus.textContent = "Запрос не выполнен.";
+        } finally {
+          tutorChatSubmit.disabled = false;
+          tutorChatSubmit.textContent = "Отправить";
+          tutorChatInput.focus();
+        }
+      });
+
+      for (const example of document.querySelectorAll(".tutor-example")) {
+        example.addEventListener("click", () => {
+          tutorChatInput.value = example.dataset.prompt;
+          tutorChatInput.focus();
+        });
       }
 
       function legacyFormulaToTex(source) {
